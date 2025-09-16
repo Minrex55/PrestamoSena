@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestión de Porteros</title>
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<h1>Gestión de Porteros</h1>
+
+<button class="btn-crear" onclick="abrirModalCrear()">➕ Crear Portero</button>
+<a href="./menuestatico.html"><button class="btn-eliminar">🏰 Ir Atras</button></a>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Documento</th>
+      <th>Nombres</th>
+      <th>Teléfono</th>
+      <th>Correo Personal</th>
+      <th>Contraseña</th>
+      <th>Rol</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody id="tabla-porteros">
+    <!-- Se cargan dinámicamente -->
+  </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <span class="close-modal" onclick="cerrarModal()">×</span>
+    <h2 id="modal-titulo">Crear Portero</h2>
+    <input type="text" id="documento" placeholder="Documento" />
+    <input type="text" id="nombres" placeholder="Nombres" />
+    <input type="text" id="telefono" placeholder="Teléfono" />
+    <input type="email" id="correopersonal" placeholder="Correo Personal" />
+    <input type="text" id="contrasena" placeholder="Contraseña" />
+    <input type="text" id="rol" placeholder="Rol" />
+    <div class="modal-actions">
+      <button onclick="guardarPortero()" class="btn-crear" id="btn-guardar">Guardar</button>
+    </div>
+  </div>
+</div>
+<script src="js/portero.js"></script>
+</body>
+</html>
