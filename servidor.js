@@ -1,19 +1,23 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const InvitadoRutas = require('./vista/InvitadoRutas');
-const PORT = process.env.PORT;
+const porteroRoutes = require('./vista/PorteroRutas'); 
 
+// Middlewares
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
-app.use('/invitado', InvitadoRutas);
+// Rutas
+app.use('/porteros', porteroRoutes);
 
+// Ruta base
 app.get('/', (req, res) => {
-    res.send('Funcionando');
+    res.send('API de Porteros funcionando');
 });
 
+// Iniciar el servidor
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
-    console.log(`Servidor escuchando en http://localhost:${PORT}`);
+    console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
