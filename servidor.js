@@ -1,23 +1,28 @@
 const express = require('express');
 const cors = require('cors');
+const Config = require('./modelo/bd/Config');
+
+// Importar rutas
+const invitadosRoutes = require('./vista/InvitadoRutas');
+const equiposRoutes = require('./vista/EquipoRutas');
+
 const app = express();
-const porteroRoutes = require('./vista/PorteroRutas'); 
 
 // Middlewares
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // Permite leer JSON en body
 
-// Rutas
-app.use('/porteros', porteroRoutes);
+// Rutas principales
+app.use('/invitados', invitadosRoutes);
+app.use('/equipos', equiposRoutes);
 
-// Ruta base
+// Ruta de prueba
 app.get('/', (req, res) => {
-    res.send('API de Porteros funcionando');
+  res.send('🚀 API funcionando correctamente');
 });
 
-// Iniciar el servidor
-const PORT = process.env.PORT;
+// Arranque del servidor
+const PORT = Config.PORT;
 app.listen(PORT, () => {
-    console.log(`Servidor escuchando en el puerto ${PORT}`);
+  console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
 });
