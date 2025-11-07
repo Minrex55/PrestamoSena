@@ -1,13 +1,13 @@
-const Conexion = require('./bd/Conexion');
+const Conexion = require('../bd/Conexion');
 
-class EquipoModelo {
+class BuscarEquipoModelo {
   constructor() {
-    if (EquipoModelo.instance) {
-      return EquipoModelo.instance;
+    if (BuscarEquipoModelo.instance) {
+      return BuscarEquipoModelo.instance;
     }
 
     this.db = Conexion;
-    EquipoModelo.instance = this;
+    BuscarEquipoModelo.instance = this;
   }
 
   /*Buscar equipo por ID*/
@@ -59,4 +59,4 @@ class EquipoModelo {
   }
 }
 
-module.exports = new EquipoModelo();
+module.exports = new BuscarEquipoModelo();

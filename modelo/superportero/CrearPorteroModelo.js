@@ -24,7 +24,7 @@ class CrearPorteroModelo {
       RETURNING *;
     `;
 
-    const values = [documento, nombres, telefono, correopersonal, contrasenaHash, "Portero"];
+    const values = [documento, nombres, telefono, correopersonal, contrasenaHash, "portero"];
 
     try {
       const result = await db.query(query, values);
