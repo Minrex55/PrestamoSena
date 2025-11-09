@@ -1,5 +1,5 @@
-const db = require('../bd/Conexion');
-const bcrypt = require('bcrypt');
+import db from '../bd/Conexion.js';
+import bcrypt from 'bcrypt';
 
 class LoginSuperPorteroModelo {
   // Método estático para autenticar un portero
@@ -34,4 +34,4 @@ class LoginSuperPorteroModelo {
   }
 }
 
-module.exports = LoginSuperPorteroModelo;
+export default LoginSuperPorteroModelo;

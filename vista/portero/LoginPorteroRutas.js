@@ -1,10 +1,12 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const PorteroControlador = require('../../controlador/portero/LoginPorteroControlador');
+import LoginPorteroControlador from '../../controlador/portero/LoginPorteroControlador.js';
 
-router.post('/portero/login', PorteroControlador.login);
+// Ruta para el login del portero
 
-module.exports = router;
+router.post('/login', LoginPorteroControlador.login);
+
+export default router;
 
 // Rutas disponibles:
 // GET     /porteros          -> listar todos los porteros

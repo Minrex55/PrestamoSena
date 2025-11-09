@@ -1,4 +1,4 @@
-const db = require('../bd/Conexion');
+import db from '../bd/Conexion.js';
 
 class EditarPorteroModelo {
   constructor(documento, nombres, telefono, correopersonal, contrasena, rol) {
@@ -32,4 +32,4 @@ class EditarPorteroModelo {
     }
 }
 
-module.exports = EditarPorteroModelo;
+export default EditarPorteroModelo;

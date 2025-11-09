@@ -1,5 +1,5 @@
-const db = require('../bd/Conexion');
-const bcrypt = require('bcrypt');
+import db from '../bd/Conexion.js';
+import bcrypt from 'bcrypt';
 
 class CrearSuperPorteroModelo {
   constructor(documento, nombres, telefono, correopersonal, contrasena) {
@@ -36,4 +36,4 @@ class CrearSuperPorteroModelo {
   }
 }
 
-module.exports = CrearSuperPorteroModelo;
+export default CrearSuperPorteroModelo;

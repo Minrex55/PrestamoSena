@@ -1,4 +1,4 @@
-const LoginSuperPorteroModelo = require('../../modelo/superportero/LoginSuperPorteroModelo');
+import LoginSuperPorteroModelo from '../../modelo/superportero/LoginSuperPorteroModelo.js';
 
 class LoginSuperPorteroControlador {
   async login(req, res) {
@@ -16,4 +16,4 @@ class LoginSuperPorteroControlador {
   }
 }
 
-module.exports = new LoginSuperPorteroControlador();
+export default new LoginSuperPorteroControlador();

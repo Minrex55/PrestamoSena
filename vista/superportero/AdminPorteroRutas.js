@@ -1,18 +1,21 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const PorteroControlador = require('../../controlador/superportero/CrearPorteroControlador');
-const SuperPorteroControlador = require('../../controlador/superportero/CrearSuperPorteroControlador');
-const LoginSuperPortero = require('../../controlador/superportero/LoginSuperPorteroControlador');
 
-router.post('/admin/portero/crear', PorteroControlador.crearPortero);
-router.post('/admin/super/crear', SuperPorteroControlador.crearSuperPortero);
-router.post('/admin/super/login', LoginSuperPortero.login);
+import CrearPorteroControlador from '../../controlador/superportero/CrearPorteroControlador.js';
+import CrearSuperPorteroControlador from '../../controlador/superportero/CrearSuperPorteroControlador.js';
+import EliminarPorteroControlador from '../../controlador/superportero/EliminarPorteroControlador.js';
+import EliminarSuperPorteroControlador from '../../controlador/superportero/EliminarSuperPorteroControlador.js';
+import BuscarPorteroControlador from '../../controlador/superportero/BuscarPorteroControlador.js';
+import EditarPorteroControlador from '../../controlador/superportero/EditarPorteroControlador.js';
+import EditarSuperPorteroControlador from '../../controlador/superportero/EditarSuperPorteroControlador.js';
 
-module.exports = router;
+router.post('/portero/crear', CrearPorteroControlador.crearPortero);
+router.post('/super/crear', CrearSuperPorteroControlador.crearSuperPortero);
+router.delete('/portero/eliminar/:id', EliminarPorteroControlador.eliminarPortero);
+router.delete('/super/eliminar/:id', EliminarSuperPorteroControlador.eliminarSuperPortero);
+router.get('/portero/buscar', BuscarPorteroControlador.mostrarTodosLosPorteros);
+router.get('/portero/buscar/:id', BuscarPorteroControlador.buscarPorteroPorId);
+router.put('/portero/editar/:id', EditarPorteroControlador.editarPortero);
+router.put('/super/editar/:id', EditarSuperPorteroControlador.editarSuperPortero);
 
-// Rutas disponibles:
-// GET     /porteros          -> listar todos los porteros
-// GET     /porteros/:id      -> obtener un portero por ID
-// POST    /porteros          -> crear un nuevo portero
-// PUT     /porteros/:id      -> actualizar un portero
-// DELETE  /porteros/:id      -> eliminar un portero
+export default router;

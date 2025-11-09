@@ -1,5 +1,5 @@
-const { Pool } = require('pg');
-const Config = require('./Config');
+import { Pool } from 'pg';
+import Config from './Config.js';
 
 class Conexion {
   constructor() {
@@ -40,4 +40,4 @@ class Conexion {
 }
 
 // Exportamos la instancia Singleton de Conexion
-module.exports = new Conexion();
+export default new Conexion();

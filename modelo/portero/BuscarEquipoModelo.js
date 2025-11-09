@@ -1,4 +1,4 @@
-const Conexion = require('../bd/Conexion');
+import Conexion from '../bd/Conexion.js';
 
 class BuscarEquipoModelo {
   constructor() {
@@ -59,4 +59,4 @@ class BuscarEquipoModelo {
   }
 }
 
-module.exports = new BuscarEquipoModelo();
+export default new BuscarEquipoModelo();

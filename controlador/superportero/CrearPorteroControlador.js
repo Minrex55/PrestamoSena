@@ -1,4 +1,4 @@
-const CrearPorteroModelo = require('../../modelo/superportero/CrearPorteroModelo'); 
+import CrearPorteroModelo from '../../modelo/superportero/CrearPorteroModelo.js';
 
 class CrearPorteroControlador {
   // Método para crear un nuevo portero
@@ -47,4 +47,4 @@ class CrearPorteroControlador {
 }
 
 // Exportamos una instancia única del controlador (opcional, pero común en POO + Express)
-module.exports = new CrearPorteroControlador();
+export default new CrearPorteroControlador();

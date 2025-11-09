@@ -1,4 +1,5 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 
 class Config {
   constructor() {
@@ -32,4 +33,4 @@ class Config {
 }
 
 // Exportamos la instancia Singleton de Config
-module.exports = new Config();
+export default new Config();

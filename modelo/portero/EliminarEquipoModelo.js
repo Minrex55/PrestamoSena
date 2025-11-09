@@ -1,21 +1,22 @@
-const db = require('../bd/Conexion');
+import db from '../bd/Conexion.js';
 
 class EliminarEquipoModelo {
-  constructor(serial, modelo, marca, estado) {
-    this.serial = serial;
-    this.modelo = modelo;
-    this.marca = marca;
-    this.estado = 'Inactivo';
-  }
- async eliminarEquipo(id) {
-     try {
-       const result = await db.query('DELETE FROM equipos WHERE idequipo = $1', [id]);
-       return result.rowCount > 0;
-     } catch (error) {
-       console.error('Error al eliminar el equipo:', error);
-       throw error;
-     }
-   }
- }
+  static async eliminarEquipo(id) {
+    const consulta = 'DELETE FROM equipos WHERE idequipo = $1 RETURNING *';
+    
+    try {
+      const result = await db.query(consulta, [id]);
 
-module.exports = EliminarEquipoModelo;
+      if (result.rowCount === 0) {
+        return null;
+      }
+
+      return result.rows[0]; // Retorna el equipo eliminado
+    } catch (error) {
+      console.error('Error al eliminar el equipo en el modelo:', error);
+      throw error;
+    }
+  }
+}
+
+export default EliminarEquipoModelo;

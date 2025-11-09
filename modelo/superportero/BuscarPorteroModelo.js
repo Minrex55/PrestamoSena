@@ -1,4 +1,4 @@
-const db = require('../bd/Conexion');
+import db from '../bd/Conexion.js';
 
 class BuscarPorteroModelo {
   constructor(documento, nombres, telefono, correopersonal, contrasena, rol) {
@@ -11,7 +11,7 @@ class BuscarPorteroModelo {
   }
   async mostrarTodos() {
       try {
-        const result = await db.query('SELECT * FROM porteria ORDER BY idportero DESC');
+        const result = await db.query('SELECT * FROM funcionarios ORDER BY idportero DESC');
         return result.rows;
       } catch (error) {
         console.error('Error al obtener los datos de portería:', error);
@@ -21,7 +21,7 @@ class BuscarPorteroModelo {
   
     async buscarporId(id) {
       try {
-        const result = await db.query('SELECT * FROM porteria WHERE idportero = $1', [id]);
+        const result = await db.query('SELECT * FROM funcionarios WHERE idportero = $1', [id]);
         return result.rows;
       } catch (error) {
         console.error('Error al obtener el portero:', error);
@@ -30,4 +30,4 @@ class BuscarPorteroModelo {
     }
 }
 
-module.exports = BuscarPorteroModelo;
+export default BuscarPorteroModelo;

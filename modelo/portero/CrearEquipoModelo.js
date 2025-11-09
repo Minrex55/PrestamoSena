@@ -1,33 +1,23 @@
-const db = require('../bd/Conexion');
-const bcrypt = require('bcrypt');
+import db from '../bd/Conexion.js';
 
 class CrearEquipoModelo {
-  constructor(serial, modelo, marca, estado) {
-    this.serial = serial;
-    this.modelo = modelo;
-    this.marca = marca;
-    this.estado = 'Inactivo';
-  }
 
-  // Método estático para crear un portero (hashea la contraseña y lo guarda en BD)
-  static async crear(serial, modelo, marca, estado) {
+  static async crear({ serial, modelo }) {
+    const estado = "Inactivo";
 
     const query = `
-      INSERT INTO equipos (serial, modelo, marca, estado)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO equipos (serial, modelo, estado)
+      VALUES ($1, $2, $3)
       RETURNING *;
     `;
 
-    const values = [serial, modelo, marca, "Inactivo"];
-
     try {
-      const result = await db.query(query, values);
-      return result.rows[0]; // Devuelve el portero creado (sin la contraseña en texto plano)
+      const result = await db.query(query, [serial, modelo, estado]);
+      return result.rows[0];
     } catch (error) {
-      // Si hay un error (ej. correo duplicado, documento duplicado, etc.)
       throw new Error(`Error al crear equipo: ${error.message}`);
     }
   }
 }
 
-module.exports = CrearEquipoModelo;
+export default CrearEquipoModelo;
