@@ -20,7 +20,7 @@ class EliminarPorteroControlador {
     } catch (error) {
       console.error('Error en eliminarPortero:', error);
       return res.status(500).json({
-        error: 'Error interno al eliminar el portero.'
+        error: error.message || 'Error al eliminar el portero.'
       });
     }
   }

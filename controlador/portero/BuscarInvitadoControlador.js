@@ -1,13 +1,11 @@
-import BuscarInvitadoModelo from '../../modelo/portero/BuscarInvitadoModelo.js';
+import buscarInvitadoModelo from '../../modelo/portero/BuscarInvitadoModelo.js';
 
 class BuscarInvitadoControlador {
   async buscarPorId(req, res) {
     const { id } = req.params;
     try {
-      const invitado = await BuscarInvitadoModelo.buscarPorId(id);
-      if (!invitado) {
-        return res.status(404).json({ error: 'Invitado no encontrado' });
-      }
+      const invitado = await buscarInvitadoModelo.buscarPorId(id);
+      if (!invitado) return res.status(404).json({ error: 'Invitado no encontrado' });
       return res.status(200).json(invitado);
     } catch (error) {
       console.error('Error en buscarPorId:', error);
@@ -15,10 +13,12 @@ class BuscarInvitadoControlador {
     }
   }
 
-    async buscarPorNombre(req, res) {
+  async buscarPorNombre(req, res) {
     const { nombre } = req.params;
     try {
-      const invitados = await BuscarInvitadoModelo.buscarPorNombre(nombre);
+      const invitados = await buscarInvitadoModelo.buscarPorNombre(nombre);
+      if (!invitados || invitados.length === 0)
+        return res.status(404).json({ mensaje: 'No se encontraron invitados con ese nombre' });
       return res.status(200).json(invitados);
     } catch (error) {
       console.error('Error en buscarPorNombre:', error);
@@ -26,13 +26,11 @@ class BuscarInvitadoControlador {
     }
   }
 
-    async buscarPorDocumento(req, res) {
+  async buscarPorDocumento(req, res) {
     const { documento } = req.params;
     try {
-      const invitado = await BuscarInvitadoModelo.buscarPorDocumento(documento);
-      if (!invitado) {
-        return res.status(404).json({ error: 'Invitado no encontrado' });
-      }
+      const invitado = await buscarInvitadoModelo.buscarPorDocumento(documento);
+      if (!invitado) return res.status(404).json({ error: 'Invitado no encontrado' });
       return res.status(200).json(invitado);
     } catch (error) {
       console.error('Error en buscarPorDocumento:', error);
@@ -42,7 +40,7 @@ class BuscarInvitadoControlador {
 
   async listarTodos(req, res) {
     try {
-      const invitados = await BuscarInvitadoModelo.listarTodos();
+      const invitados = await buscarInvitadoModelo.listarTodos();
       return res.status(200).json(invitados);
     } catch (error) {
       console.error('Error en listarTodos:', error);

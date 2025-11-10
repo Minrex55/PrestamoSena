@@ -1,7 +1,7 @@
 import EditarSuperPorteroModelo from '../../modelo/superportero/EditarSuperPorteroModelo.js'; 
 
 class EditarSuperPorteroControlador {
-  // Método para editar un portero existente
+  // Método para editar un SuperPortero existente
   async editarSuperPortero(req, res) {
     const { id } = req.params;
     const { documento, nombres, telefono, correopersonal, contrasena } = req.body;
@@ -14,24 +14,19 @@ class EditarSuperPorteroControlador {
     }
 
     try {
-      const superPorteroActualizado = await EditarSuperPorteroModelo.editarSuperPortero(
-        id,
-        documento,
-        nombres,
-        telefono,
-        correopersonal,
-        contrasena
-      );
+      const datosActualizar = { documento, nombres, telefono, correopersonal, contrasena };
+      const superPorteroActualizado = await EditarSuperPorteroModelo.editarSuperPortero(id, datosActualizar);
+
 
       return res.status(200).json({
         mensaje: 'SuperPortero actualizado exitosamente',
-        portero: superPorteroActualizado
+        superPortero: superPorteroActualizado
       });
 
     } catch (error) {
       console.error('Error en editarSuperPortero:', error);
       return res.status(500).json({
-        error: 'Error interno al editar el SuperPortero.'
+        error: error.message || 'Error al actualizar el Superportero.'
       });
     }
   }

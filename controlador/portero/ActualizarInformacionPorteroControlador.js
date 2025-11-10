@@ -26,7 +26,7 @@ class ActualizarInformacionPorteroControlador {
       });
     } catch (error) {
       console.error('Error en actualizarInformacion:', error);
-      return res.status(500).json({ error: 'Error interno al actualizar la información del portero.' });
+      return res.status(500).json({ error: error.message || 'Error interno del servidor.' });
     }
   }
 }

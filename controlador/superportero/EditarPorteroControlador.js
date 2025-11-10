@@ -1,4 +1,4 @@
-import EditarPorteroModelo from '../../modelo/superportero/EditarPorteroModelo.js'; 
+import EditarPorteroModelo from '../../modelo/superportero/EditarSuperPorteroModelo.js'; 
 
 class EditarPorteroControlador {
   // Método para editar un portero existente
@@ -14,14 +14,9 @@ class EditarPorteroControlador {
     }
 
     try {
-      const porteroActualizado = await EditarPorteroModelo.editarPortero(
-        id,
-        documento,
-        nombres,
-        telefono,
-        correopersonal,
-        contrasena
-      );
+      const datosActualizar = { documento, nombres, telefono, correopersonal, contrasena };
+      const porteroActualizado = await EditarPorteroModelo.editarSuperPortero(id, datosActualizar);
+
 
       return res.status(200).json({
         mensaje: 'Portero actualizado exitosamente',
@@ -31,7 +26,7 @@ class EditarPorteroControlador {
     } catch (error) {
       console.error('Error en editarPortero:', error);
       return res.status(500).json({
-        error: 'Error interno al editar el portero.'
+        error: error.message || 'Error al actualizar el portero.'
       });
     }
   }

@@ -20,7 +20,7 @@ class EliminarSuperPorteroControlador {
     } catch (error) {
       console.error('Error en eliminarSuperPortero:', error);
       return res.status(500).json({
-        error: 'Error interno al eliminar el SuperPortero.'
+        error: error.message || 'Error al eliminar el Superportero.'
       });
     }
   }

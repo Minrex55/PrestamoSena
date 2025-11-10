@@ -18,7 +18,7 @@ class EditarEquipoControlador {
       });
     } catch (error) {
       console.error('Error al actualizar el equipo:', error);
-      return res.status(500).json({ mensaje: 'Error interno del servidor.' });
+      return res.status(500).json({ mensaje: error.message });
     }
   }
 }

@@ -1,35 +1,44 @@
 import db from '../bd/Conexion.js';
 
 class EditarPorteroModelo {
-  constructor(documento, nombres, telefono, correopersonal, contrasena, rol) {
-    this.documento = documento;
-    this.nombres = nombres;
-    this.telefono = telefono;
-    this.correopersonal = correopersonal;
-    this.contrasena = contrasena;
-    this.rol = rol;
-  }
-  async editarPortero(id, datos) {
-      const fields = Object.keys(datos);
-      const values = Object.values(datos);
-  
-      if (fields.length === 0) {
-        throw new Error('No se proporcionaron datos para actualizar');
-      }
-  
-      const setClause = fields.map((field, index) => `${field} = $${index + 1}`).join(', ');
-      const query = `UPDATE porteria SET ${setClause} WHERE idportero = $${fields.length + 1}`;
-  
-      values.push(id);
-  
-      try {
-        await db.query(query, values);
-        return { message: 'Portero actualizado correctamente' };
-      } catch (error) {
-        console.error('Error al actualizar el portero:', error);
-        throw error;
-      }
+  static async editarPortero(id, datos) {
+    if (!id) {
+      throw new Error('ID del portero no proporcionado');
     }
+
+    // Verificamos que el usuario sea portero
+    const checkQuery = 'SELECT rol FROM funcionarios WHERE idportero = $1';
+    const checkResult = await db.query(checkQuery, [id]);
+
+    if (checkResult.rows.length === 0) {
+      throw new Error('Portero no encontrado.');
+    }
+
+    if (checkResult.rows[0].rol !== 'Portero') {
+      throw new Error('Solo se pueden editar porteros.');
+    }
+
+    const fields = Object.keys(datos);
+    const values = Object.values(datos);
+
+    if (!fields || fields.length === 0) {
+      throw new Error('No se proporcionaron datos para actualizar');
+    }
+
+    // Escapamos los nombres de columnas para que PostgreSQL no falle
+    const setClause = fields.map((field, index) => `"${field}" = $${index + 1}`).join(', ');
+
+    const query = `UPDATE funcionarios SET ${setClause} WHERE idportero = $${fields.length + 1}`;
+    values.push(id);
+
+    try {
+      await db.query(query, values);
+      return { message: 'Portero actualizado correctamente' };
+    } catch (error) {
+      console.error('Error al actualizar el portero:', error);
+      throw error;
+    }
+  }
 }
 
 export default EditarPorteroModelo;
