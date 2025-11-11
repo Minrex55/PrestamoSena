@@ -15,7 +15,7 @@ class EditarSuperPorteroModelo {
     }
 
     if (checkResult.rows[0].rol !== 'Superportero') {
-      throw new Error('Solo se pueden editar SuperPorteros.');
+      throw new Error('No cuentas con los permisos para realizar esta acción');
     }
 
     const fields = Object.keys(datos);

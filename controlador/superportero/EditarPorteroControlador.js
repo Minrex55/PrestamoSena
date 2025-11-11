@@ -1,4 +1,4 @@
-import EditarPorteroModelo from '../../modelo/superportero/EditarSuperPorteroModelo.js'; 
+import EditarPorteroModelo from '../../modelo/superportero/EditarPorteroModelo.js'; 
 
 class EditarPorteroControlador {
   // Método para editar un portero existente
@@ -15,7 +15,7 @@ class EditarPorteroControlador {
 
     try {
       const datosActualizar = { documento, nombres, telefono, correopersonal, contrasena };
-      const porteroActualizado = await EditarPorteroModelo.editarSuperPortero(id, datosActualizar);
+      const porteroActualizado = await EditarPorteroModelo.editarPortero(id, datosActualizar);
 
 
       return res.status(200).json({

@@ -15,7 +15,7 @@ class EditarPorteroModelo {
     }
 
     if (checkResult.rows[0].rol !== 'Portero') {
-      throw new Error('Solo se pueden editar porteros.');
+      throw new Error('No cuentas con los permisos para realizar esta acción');
     }
 
     const fields = Object.keys(datos);
