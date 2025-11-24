@@ -29,7 +29,7 @@ class ObtenerEquipoControlador {
     }
 
     async obtenerEquipoPorModelo(req, res) {
-        const {modelo} = req.body
+        const {modelo} = req.query
 
         try {
             const equipoObtenidoPorModelo = await ObtenerEquipoModelo.obtenerEquipoPorModelo(modelo);
@@ -50,7 +50,7 @@ class ObtenerEquipoControlador {
     }
 
     async obtenerEquipoPorNumeroDeSerie(req, res) {
-        const {numerodeserie} = req.body
+        const {numerodeserie} = req.query
 
         try {
             const equipoObtenidoPorNumeroDeSerie = await ObtenerEquipoModelo.obtenerEquipoPorNumeroDeSerie(numerodeserie);

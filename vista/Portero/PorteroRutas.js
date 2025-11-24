@@ -27,7 +27,7 @@ class PorteroRutas {
     this.router.get('/equipo/serial', ObtenerEquipoControlador.obtenerEquipoPorNumeroDeSerie);
 
     this.router.get('/equipo', ObtenerEquipoControlador.obtenerEquipos);
-    this.router.get('/equipo/:id', ObtenerEquipoControlador.obtenerEquipoPorId);
+    this.router.get('/equipo/:idequipo', ObtenerEquipoControlador.obtenerEquipoPorId);
 
     this.router.put('/equipo/editar/:idequipo', ActualizarEquipoControlador.actualizarEquipo);
 
