@@ -1,43 +1,39 @@
-import { Pool } from 'pg';
-import Config from './Config.js';
+import { Pool } from "pg";
+import Config from "./Config.js";
 
 class Conexion {
-  constructor() {
-    if (Conexion.instance) {
-      return Conexion.instance; // Devuelve la instancia existente si ya fue creada
+    constructor() {
+        if (Conexion.instance) {
+            return Conexion.instance;
+        }
+
+        //Configuracion de la conexion a PostgreSQL
+        this.pool = new Pool({
+            host: Config.DB_HOST,
+            user: Config.DB_USER,
+            database: Config.DB_NAME,
+            password: Config.DB_PASSWORD,
+            port: Config.DB_PORT,
+            max: 10,
+            idleTimeoutMillis: 30000,
+            connectionTimeoutMillis: 2000
+        });
+
+        this.pool.connect()
+            .then(client => {
+                console.log('Conexion a PostgreSQL exitosa')
+                client.release();
+            })
+            .catch(error => {
+                console.error('Error al conectar a PostgreSQL', error.message);
+            });
+
+            Conexion.instance = this;
     }
 
-    // Configuración de la conexión a PostgreSQL
-    this.pool = new Pool({
-      host: Config.DB_HOST,
-      user: Config.DB_USER,
-      password: Config.DB_PASSWORD,
-      database: Config.DB_NAME,
-      port: Config.DB_PORT,
-      max: 10,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 2000
-    });
-
-    // Probar conexión al iniciar
-    this.pool.connect()
-      .then(client => {
-        console.log('✅ Conexión a PostgreSQL exitosa');
-        client.release();
-      })
-      .catch(err => {
-        console.error('❌ Error al conectar a PostgreSQL:', err.message);
-      });
-
-    // Asignamos la instancia única
-    Conexion.instance = this;
-  }
-
-  // Método para ejecutar una consulta
-  query(text, params) {
-    return this.pool.query(text, params);
-  }
+    query(text,  params) {
+        return this.pool.query(text, params);
+    }
 }
 
-// Exportamos la instancia Singleton de Conexion
 export default new Conexion();

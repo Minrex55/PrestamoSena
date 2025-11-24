@@ -1,0 +1,34 @@
+import ActualizarEquipoModelo from '../../modelo/Portero/ActualizarEquipoModelo.js';
+
+class ActualizarEquipoControlador {
+    constructor(){
+        if (ActualizarEquipoControlador.instance) {
+            return ActualizarEquipoControlador.instance
+        }
+        ActualizarEquipoControlador.instance = this;
+    }
+
+    async actualizarEquipo(req, res) {
+        const {idequipo} = req.params;
+        const equipo = req.body;
+
+        try {
+            const equipoActualizado = await ActualizarEquipoModelo.actualizarEquipo(idequipo, equipo)
+            
+            if (!equipoActualizado) {
+                return res.status(404).json({mensaje: 'Equipo no encontrado.'})
+            }
+
+            return res.status(200).json({
+                mensaje: 'Equipo Actualizado correctamente',
+                equipoActualizado
+            })
+
+        }catch(error) {
+            console.error('Error al actualizar el equipo')
+            return res.status(500).json({mensaje: 'Error interno al actualizar el equipo'})
+        }
+    }
+}
+
+export default new ActualizarEquipoControlador();

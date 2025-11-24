@@ -1,0 +1,30 @@
+import EliminarAdministradorModelo from '../../modelo/Administrador/EliminarAdministradorModelo.js';
+
+class EliminarAdministradorControlador {
+  // Método para eliminar un portero existente
+  async eliminarAdministrador(req, res) {
+    const { id } = req.params;
+
+    try {
+      const resultado = await EliminarAdministradorModelo.eliminarAdministrador(id);
+      if (resultado.rowCount === 0) {
+        return res.status(404).json({
+          error: 'Administrador no encontrado.'
+        });
+      }
+
+      return res.status(200).json({
+        mensaje: 'Administrador eliminado exitosamente'
+      });
+
+    } catch (error) {
+      console.error('Error en eliminarAdministrador:', error);
+      return res.status(500).json({
+        error: error.message || 'Error al eliminar el Administrador.'
+      });
+    }
+  }
+}
+
+// Exportamos una instancia única del controlador 
+export default new EliminarAdministradorControlador();

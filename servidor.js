@@ -1,33 +1,50 @@
-import express from 'express';
-import cors from 'cors';
-import Config from './modelo/bd/Config.js'
-// Importar rutas
+import { configDotenv } from "dotenv";
+import express from "express";
+import cors from "cors";
+import InvitadoRutas from "./vista/Invitado/InvitadoRutas.js";
+import LoginInvitadoRutas from "./vista/Invitado/LoginInvitadoRutas.js";
+import PorteroRutas from  "./vista/Portero/PorteroRutas.js"
+import LoginPorteroRutas from "./vista/Portero/LoginPorteroRutas.js";
+import AdministradorRutas from "./vista/Administrador/AdministradorRutas.js";
+import LoginAdministradorRutas from "./vista/Administrador/LoginAdministradorRutas.js";
 
-import porteroRutas from './vista/portero/PorteroRutas.js';
-import loginPorteroRutas from './vista/portero/LoginPorteroRutas.js';
-import adminporterorutas from './vista/superportero/AdminPorteroRutas.js';
-import loginAdminPorteroRutas from './vista/superportero/LoginAdminPorteroRutas.js';
+configDotenv();
 
-const app = express();
+class Servidor {
+    constructor() {
+        if (Servidor.instance) {
+            return Servidor.instance;
+        }
 
-// Middlewares
-app.use(cors());
-app.use(express.json()); // Permite leer JSON en body
-app.use(express.urlencoded({ extended: true }));
+        this.app = express();
+        this.configurarMiddlewares();
+        this.configurarRutas();
 
-// Rutas principales
-app.use('/portero', porteroRutas);
-app.use('/loginportero', loginPorteroRutas);
-app.use('/admin', adminporterorutas);
-app.use('/loginadmin', loginAdminPorteroRutas);
+        Servidor.instance = this;
+    }
 
-// Ruta de prueba
-app.get('/', (req, res) => {
-  res.send('🚀 API funcionando correctamente');
-});
+    configurarMiddlewares() {
+        this.app.use(cors());
+        this.app.use(express.json());
+        this.app.use(express.urlencoded({ extended: true}));
+    }
 
-// Arranque del servidor
-const PORT = Config.PORT;
-app.listen(PORT, () => {
-  console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
-});
+    configurarRutas() {
+        this.app.use('/invitado', InvitadoRutas);
+        this.app.use('/logininvitado', LoginInvitadoRutas);
+        this.app.use('/portero', PorteroRutas);
+        this.app.use('/loginportero', LoginPorteroRutas);
+        this.app.use('/admin', AdministradorRutas);
+        this.app.use('/loginadmin', LoginAdministradorRutas);
+    }
+
+    iniciar() {
+        const PORT = process.env.PORT;
+        this.app.listen(PORT, () => {
+            console.log(`Servidor escuchando en http://localhost:${PORT}`);
+        });
+    }
+}
+
+const servidor = new Servidor();
+servidor.iniciar();
