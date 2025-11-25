@@ -1,12 +1,18 @@
 import CrearAdministradorModelo from '../../modelo/Administrador/CrearAdministradorModelo.js';
 
 class CrearAdministradorControlador {
-  // Método para crear un nuevo administrador
-  async crearAdministrador(req, res) {
-    const { documento, nombres, telefono, correopersonal, contrasena } = req.body;
+    constructor() {
+        if (CrearAdministradorControlador.instance) {
+          return CrearAdministradorControlador.instance;
+        }
+        CrearAdministradorControlador.instance = this;
+    }
+
+    async crearAdministrador(req, res) {
+    const { t1: documento, t2: nombres, t3: telefono, t4: correopersonal, t5: contrasena } = req.body;
 
     // Validación básica (puedes mejorarla)
-    if (!documento || !nombres || !correopersonal || !contrasena) {
+    if (!documento || !nombres || !telefono || !correopersonal || !contrasena) {
       return res.status(400).json({
         error: 'Los campos documento, nombres, correo y contraseña son obligatorios.'
       });
@@ -14,13 +20,7 @@ class CrearAdministradorControlador {
 
     try {
       // Llama al método estático del modelo para crear el Administrador (con bcrypt)
-      const AdministradorCreado = await CrearAdministradorModelo.crear(
-        documento,
-        nombres,
-        telefono,
-        correopersonal,
-        contrasena
-      );
+      const AdministradorCreado = await CrearAdministradorModelo.crear(documento,nombres,telefono,correopersonal,contrasena);
 
       // Eliminamos la contraseña del objeto antes de enviarlo (buena práctica)
       const { contrasena: _, ...AdministradorSeguro } = AdministradorCreado;
@@ -44,7 +44,7 @@ class CrearAdministradorControlador {
       });
     }
   }
+
 }
 
-// Exportamos una instancia única del controlador (opcional, pero común en POO + Express)
 export default new CrearAdministradorControlador();

@@ -1,6 +1,12 @@
 import EliminarAdministradorModelo from '../../modelo/Administrador/EliminarAdministradorModelo.js';
 
 class EliminarAdministradorControlador {
+  constructor() {
+    if (EliminarAdministradorControlador.instance) {
+      return EliminarAdministradorControlador.instance;
+    }
+    EliminarAdministradorControlador.instance = this;
+  }
   // Método para eliminar un portero existente
   async eliminarAdministrador(req, res) {
     const { id } = req.params;

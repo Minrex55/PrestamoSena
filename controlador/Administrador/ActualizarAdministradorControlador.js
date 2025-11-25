@@ -1,10 +1,15 @@
 import EditarAdministradorModelo from '../../modelo/Administrador/EditarAdministradorModelo.js'; 
 
-class EditarAdministradorControlador {
-  // Método para editar un Administrador existente
-  async editarAdministrador(req, res) {
-    const { id } = req.params;
-    const { documento, nombres, telefono, correopersonal, contrasena } = req.body;
+class ActualizarAdministradorControlador {
+    constructor() {
+        if (ActualizarAdministradorControlador.instance) {
+          return ActualizarAdministradorControlador.instance;
+        }
+        ActualizarAdministradorControlador.instance = this;
+    }
+    async editarAdministrador(req, res) {
+    const { idadmin } = req.params;
+    const { t1: documento, t2: nombres, t3: telefono, t4: correopersonal, t5: contrasena } = req.body;
 
     // Validación básica
     if (!documento || !nombres || !telefono || !correopersonal || !contrasena) {
@@ -15,7 +20,7 @@ class EditarAdministradorControlador {
 
     try {
       const datosActualizar = { documento, nombres, telefono, correopersonal, contrasena };
-      const AdministradorActualizado = await EditarAdministradorModelo.editarAdministrador(id, datosActualizar);
+      const AdministradorActualizado = await EditarAdministradorModelo.editarAdministrador(idadmin, datosActualizar);
 
 
       return res.status(200).json({
@@ -30,7 +35,7 @@ class EditarAdministradorControlador {
       });
     }
   }
+
 }
 
-// Exportamos una instancia única del controlador (opcional, pero común en POO + Express)
-export default new EditarAdministradorControlador();
+export default new ActualizarAdministradorControlador();

@@ -1,14 +1,22 @@
 import EliminarPorteroModelo from '../../modelo/Administrador/EliminarPorteroModelo.js';
 
 class EliminarPorteroControlador {
-  // Método para eliminar un portero existente
-  async eliminarPortero(req, res) {
-    const { id } = req.params;
+  constructor() {
+    if (EliminarPorteroControlador.instance) {
+      return EliminarPorteroControlador.instance;
+    }
+    EliminarPorteroControlador.instance = this;
+  }
 
-    try {
-      const resultado = await EliminarPorteroModelo.eliminarPortero(id);
-      if (resultado.rowCount === 0) {
-        return res.status(404).json({
+  // Método para eliminar un portero existente
+
+  async eliminarPortero(req, res) {
+      const { idportero } = req.params;
+
+      try {
+        const resultado = await EliminarPorteroModelo.eliminarPortero(idportero);
+        if (resultado.rowCount === 0) {
+          return res.status(404).json({
           error: 'Portero no encontrado.'
         });
       }
@@ -24,7 +32,7 @@ class EliminarPorteroControlador {
       });
     }
   }
+
 }
 
-// Exportamos una instancia única del controlador 
 export default new EliminarPorteroControlador();

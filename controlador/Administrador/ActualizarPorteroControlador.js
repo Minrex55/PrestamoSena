@@ -1,10 +1,15 @@
 import EditarPorteroModelo from '../../modelo/Administrador/EditarPorteroModelo.js'; 
 
-class EditarPorteroControlador {
-  // Método para editar un portero existente
-  async editarPortero(req, res) {
-    const { id } = req.params;
-    const { documento, nombres, telefono, correopersonal, contrasena } = req.body;
+class ActualizarPorteroControlador {
+    constructor() {
+        if (ActualizarPorteroControlador.instance) {
+            return ActualizarPorteroControlador.instance;
+        }
+        ActualizarPorteroControlador.instance = this;
+    }
+    async editarPortero(req, res) {
+    const { idportero } = req.params;
+    const { t1: documento, t2: nombres, t3: telefono, t4: correopersonal, t5: contrasena } = req.body;
 
     // Validación básica
     if (!documento || !nombres || !telefono || !correopersonal || !contrasena) {
@@ -15,7 +20,7 @@ class EditarPorteroControlador {
 
     try {
       const datosActualizar = { documento, nombres, telefono, correopersonal, contrasena };
-      const porteroActualizado = await EditarPorteroModelo.editarPortero(id, datosActualizar);
+      const porteroActualizado = await EditarPorteroModelo.editarPortero(idportero, datosActualizar);
 
 
       return res.status(200).json({
@@ -32,5 +37,4 @@ class EditarPorteroControlador {
   }
 }
 
-// Exportamos una instancia única del controlador (opcional, pero común en POO + Express)
-export default new EditarPorteroControlador();
+export default new ActualizarPorteroControlador();

@@ -10,7 +10,7 @@ class ObtenerAdministradorControlador {
     // Método para buscar un administrador por id 
     async obtenerAdministradorPorId(req, res) {
         const { idadmin } = req.params; // Obtener el id desde los parámetros de la solicitud
-        
+
         try {
             const administrador = await ObtenerAdministradorModelo.buscarporId(idadmin);
             if (!administrador) {
@@ -18,6 +18,8 @@ class ObtenerAdministradorControlador {
             }
             res.json(administrador);
         } catch (error) {
+
+
             console.error('Error al buscar el administrador:', error);
             res.status(500).json({ mensaje: 'Error interno del servidor' });
         }
@@ -25,14 +27,14 @@ class ObtenerAdministradorControlador {
 
     // Método para mostrar todos los administradores
     async obtenerAdministradores(req, res) {
-       
+
         try {
             const administradores = await ObtenerAdministradorModelo.mostrarTodos();
             res.json(administradores);
         } catch (error) {
             console.error('Error al obtener los administradores:', error);
             res.status(500).json({ mensaje: 'Error interno del servidor' });
-        }   
+        }
     }
 }
 

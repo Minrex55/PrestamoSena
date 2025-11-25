@@ -5,9 +5,9 @@ import CrearPorteroControlador from '../../controlador/Administrador/CrearPorter
 import CrearAdministradorControlador from '../../controlador/Administrador/CrearAdministradorControlador.js';
 import EliminarPorteroControlador from '../../controlador/Administrador/EliminarPorteroControlador.js';
 import EliminarAdministradorControlador from '../../controlador/Administrador/EliminarAdministradorControlador.js';
-import BuscarPorteroControlador from '../../controlador/Administrador/BuscarPorteroControlador.js';
-import EditarPorteroControlador from '../../controlador/Administrador/EditarPorteroControlador.js';
-import EditarAdministradorControlador from '../../controlador/Administrador/EditarAdministradorControlador.js';
+import ObtenerPorteroControlador from '../../controlador/Administrador/ObtenerPorteroControlador.js';
+import ActualizarPorteroControlador from '../../controlador/Administrador/ActualizarPorteroControlador.js';
+import ActualizarAdministradorControlador from '../../controlador/Administrador/ActualizarAdministradorControlador.js';
 import ObtenerAdministradorControlador from '../../controlador/Administrador/ObtenerAdministradorControlador.js';
 
 
@@ -26,7 +26,7 @@ class AdministradorRutas {
 // ---------------------
 this.router.post('/crear', CrearAdministradorControlador.crearAdministrador);
 this.router.delete('/eliminar/:id', EliminarAdministradorControlador.eliminarAdministrador);
-this.router.put('/editar/:id', EditarAdministradorControlador.editarAdministrador);
+this.router.put('/editar/:id', ActualizarAdministradorControlador.editarAdministrador);
 this.router.get('/buscar', ObtenerAdministradorControlador.obtenerAdministradores);
 this.router.get('/buscar/:idadmin', ObtenerAdministradorControlador.obtenerAdministradorPorId);
 // -------------------------------
@@ -34,9 +34,9 @@ this.router.get('/buscar/:idadmin', ObtenerAdministradorControlador.obtenerAdmin
 // -------------------------------
 this.router.post('/portero/crear', CrearPorteroControlador.crearPortero);
 this.router.delete('/portero/eliminar/:id', EliminarPorteroControlador.eliminarPortero);
-this.router.put('/portero/editar/:id', EditarPorteroControlador.editarPortero);
-this.router.get('/portero/buscar', BuscarPorteroControlador.mostrarTodosLosPorteros);
-this.router.get('/portero/buscar/:id', BuscarPorteroControlador.buscarPorteroPorId);
+this.router.put('/portero/editar/:id', ActualizarPorteroControlador.editarPortero);
+this.router.get('/portero/buscar', ObtenerPorteroControlador.mostrarTodosLosPorteros);
+this.router.get('/portero/buscar/:id', ObtenerPorteroControlador.buscarPorteroPorId);
      }
 
     obtenerRutas() {
