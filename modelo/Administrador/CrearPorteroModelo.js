@@ -1,39 +1,34 @@
-import db from '../bd/Conexion.js';
-import bcrypt from 'bcrypt';
+import Conexion from "../bd/Conexion.js";
 
 class CrearPorteroModelo {
-  constructor(documento, nombres, telefono, correopersonal, contrasena) {
-    this.documento = documento;
-    this.nombres = nombres;
-    this.telefono = telefono;
-    this.correopersonal = correopersonal;
-    this.contrasena = contrasena; 
-    this.rol = 'portero';
-  }
+    constructor(){
+        if (CrearPorteroModelo.instance) {
+            return CrearPorteroModelo.instance
+        }
 
-  // Método estático para crear un portero (hashea la contraseña y lo guarda en BD)
-  static async crear(documento, nombres, telefono, correopersonal, contrasena, rol) {
-    // 1. Hashear la contraseña
-    const saltRounds = 10;
-    const contrasenaHash = await bcrypt.hash(contrasena, saltRounds);
-
-    // 2. Consulta SQL para insertar
-    const query = `
-      INSERT INTO portero (documento, nombres, telefono, correopersonal, contrasena, rol)
-      VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING *;
-    `;
-
-    const values = [documento, nombres, telefono, correopersonal, contrasenaHash, "Portero"];
-
-    try {
-      const result = await db.query(query, values);
-      return result.rows[0]; // Devuelve el portero creado (sin la contraseña en texto plano)
-    } catch (error) {
-      // Si hay un error (ej. correo duplicado, documento duplicado, etc.)
-      throw new Error(`Error al crear portero: ${error.message}`);
+        this.db = Conexion;
+        CrearPorteroModelo.instance =  this;
     }
-  }
+
+    async crearPortero(portero) {
+        const {documento,nombres,telefono,correopersonal,contrasena,} = portero
+
+        const query = `INSERT INTO portero (documento, nombres, telefono, correopersonal, contrasena)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING *;`;
+
+        const valores = [
+            documento, nombres, telefono, correopersonal, contrasena
+        ];
+
+        try{
+            const resultado = await this.db.query(query, valores);
+            return resultado.rows[0];
+        }catch(error){
+            console.log('Error al crear Portero')
+            throw error;
+        }
+    }
 }
 
-export default CrearPorteroModelo;
+export default new CrearPorteroModelo();
