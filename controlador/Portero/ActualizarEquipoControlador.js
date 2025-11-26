@@ -10,9 +10,10 @@ class ActualizarEquipoControlador {
 
     async actualizarEquipo(req, res) {
         const {idequipo} = req.params;
-        const equipo = req.body;
+        const {t1: modelo, t2: numerodeserie, t3: idinvitado} = req.body;
 
         try {
+            const equipo = {modelo, numerodeserie, idinvitado}
             const equipoActualizado = await ActualizarEquipoModelo.actualizarEquipo(idequipo, equipo)
             
             if (!equipoActualizado) {

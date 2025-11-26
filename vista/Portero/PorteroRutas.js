@@ -18,42 +18,18 @@ class PorteroRutas {
     }
 
     configurarRutas() {
-    // -------------------------
-    // EQUIPOS
-    // -------------------------
     this.router.post('/equipo/crear', CrearEquipoControlador.crearEquipo);
-
     this.router.get('/equipo/modelo', ObtenerEquipoControlador.obtenerEquipoPorModelo);
     this.router.get('/equipo/serial', ObtenerEquipoControlador.obtenerEquipoPorNumeroDeSerie);
-
     this.router.get('/equipo', ObtenerEquipoControlador.obtenerEquipos);
     this.router.get('/equipo/:idequipo', ObtenerEquipoControlador.obtenerEquipoPorId);
-
-    this.router.put('/equipo/editar/:idequipo', ActualizarEquipoControlador.actualizarEquipo);
-
+    this.router.put('/equipo/actualizar/:idequipo', ActualizarEquipoControlador.actualizarEquipo);
     this.router.delete('/equipo/eliminar/:idequipo', EliminarEquipoControlador.eliminarEquipo);
-
-
-    // -------------------------
-    // INVITADOS
-    // -------------------------
-
-    // Específicas primero
     this.router.get('/invitado/documento', ObtenerInvitadoControlador.obtenerInvitadoPorDocumento);
     this.router.get('/invitado/nombre', ObtenerInvitadoControlador.obtenerInvitadoPorNombre);
-
-    // Listado general
     this.router.get('/invitado', ObtenerInvitadoControlador.obtenerInvitados);
-
-    // Luego las que llevan parámetro
     this.router.get('/invitado/:idinvitado', ObtenerInvitadoControlador.obtenerInvitadoPorId);
-
     this.router.delete('/invitado/eliminar/:idinvitado', EliminarInvitadoControlador.eliminarInvitado);
-
-
-    // -------------------------
-    // PORTERO
-    // -------------------------
     this.router.put('/actualizar/:idportero', ActualizarPorteroControlador.actualizarPortero);
 }
 

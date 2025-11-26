@@ -21,7 +21,10 @@ class EliminarEquipoControlador {
         });
       }
 
-      return res.status(200).json({mensaje: 'Equipo eliminado correctamente'})
+      return res.status(200).json({
+        mensaje:'Equipo eliminado correctamente',
+        equipoEliminado
+      })
 
     }catch(error) {
       console.error('Error al eliminar el equipo', error);

@@ -14,20 +14,7 @@ class EliminarEquipoModelo {
 
     try {
       const resultado = await this.db.query(query, [idequipo])
-
-      if (resultado.rowCount === 0) {
-        return {
-        exito: false,
-        mensaje: `El equipo con ID ${idequipo} no existe`
-        } 
-      }
-
-      return {
-        exito: true,
-        mensaje: `Equipo eliminado correctamente`,
-        data: resultado.rows[0]
-      }
-      
+      return resultado.rows[0] || null
     }catch(error) {
       console.error('Error al eliminar el equipo', error);
     }

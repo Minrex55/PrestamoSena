@@ -10,11 +10,11 @@ class ActualizarPorteroControlador {
 
     async actualizarPortero(req, res) {
         const {idportero} = req.params;
-        const { documento, nombres, telefono, correopersonal, contrasena} = req.body;
+        const { t1: documento, t2: nombres, t3: telefono, t4: correopersonal, t5: contrasena} = req.body;
         if (!documento || !nombres || !telefono || !correopersonal || !contrasena) {
-      return res.status(400).json({
-        error: 'Los campos documento, nombres, telefono, correo y contraseña son obligatorios.'
-      });
+            return res.status(400).json({
+            error: 'Los campos documento, nombres, telefono, correo y contraseña son obligatorios.'
+        });
     }
 
         try {

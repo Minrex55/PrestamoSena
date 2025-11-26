@@ -14,20 +14,7 @@ class EliminarInvitadoModelo {
 
     try {
       const resultado = await this.db.query(query, [idinvitado]);
-
-      if (resultado.rowCount === 0) {
-        return {
-        exito: false,
-        mensaje: `El invitado con ID ${idinvitado} no existe`
-        } 
-      }
-
-      return {
-        exito: true,
-        mensaje: `Invitado eliminado correctamente`,
-        data: resultado.rows[0]
-      }
-
+      return resultado.rows[0] || null
     }catch(error) {
       console.error('Error al eliminar el invitado', error)
     }

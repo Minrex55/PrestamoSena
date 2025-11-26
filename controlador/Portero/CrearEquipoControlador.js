@@ -9,7 +9,7 @@ class CrearEquipoControlador{
     }
 
     async crearEquipo(req, res) {
-      const {modelo, numerodeserie, idinvitado} = req.body
+      const {t1: modelo, t2: numerodeserie, t3: idinvitado} = req.body
 
       if (!modelo || !numerodeserie || !idinvitado) {
       return res.status(400).json({ mensaje: 'Todos los campos son obligatorios.' });
