@@ -1,28 +1,36 @@
-import db from '../bd/Conexion.js';
+import Conexion from '../bd/Conexion.js';
 
 class EliminarAdministradorModelo {
-  static async eliminarAdministrador(id) {
-    // 1️⃣ Verificar si existe y si es Administrador
-    const checkQuery = 'SELECT rol FROM administrador WHERE idadmin = $1';
-    const checkResult = await db.query(checkQuery, [id]);
-
-    if (checkResult.rows.length === 0) {
-      throw new Error('Administrador no encontrado.');
+  constructor() {
+    if (EliminarAdministradorModelo.instance) {
+      return EliminarAdministradorModelo.instance
     }
+    this.db = Conexion;
+    EliminarAdministradorModelo.instance = this;
+  }
 
-    if (checkResult.rows[0].rol !== 'Administrador') {
-      throw new Error('Solo se pueden eliminar Administradors.');
-    }
-
-    // 2️⃣ Si pasa la verificación, eliminar
+  async eliminarAdministrador(idadmin) {
+    const query = `DELETE FROM administrador WHERE idadmin = $1 RETURNING *`;
     try {
-      const result = await db.query('DELETE FROM administrador WHERE idadmin = $1', [id]);
-      return result.rowCount > 0; // true si eliminó, false si no
-    } catch (error) {
-      console.error('Error al eliminar el Administrador:', error);
-      throw error;
+      const resultado = await this.db.query(query, [idadmin]);
+
+      if (resultado.rowCount === 0) {
+        return {
+        exito: false,
+        mensaje: `El administrador con ID ${idadmin} no existe`
+        } 
+      }
+
+      return {
+        exito: true,
+        mensaje: `Administrador eliminado correctamente`,
+        data: resultado.rows[0]
+      }
+
+    }catch(error) {
+      console.error('Error al eliminar el administrador', error)
     }
   }
 }
 
-export default EliminarAdministradorModelo;
+export default new EliminarAdministradorModelo();

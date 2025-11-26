@@ -22,7 +22,7 @@ class EliminarPorteroControlador {
       }
 
       return res.status(200).json({
-        mensaje: 'Portero eliminado exitosamente'
+        resultado
       });
 
     } catch (error) {

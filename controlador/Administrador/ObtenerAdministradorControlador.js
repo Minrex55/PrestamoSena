@@ -29,8 +29,8 @@ class ObtenerAdministradorControlador {
     async obtenerAdministradores(req, res) {
 
         try {
-            const administradores = await ObtenerAdministradorModelo.mostrarTodos();
-            res.json(administradores);
+            const obtenerAdministradores = await ObtenerAdministradorModelo.mostrarTodos();
+            res.json(obtenerAdministradores);
         } catch (error) {
             console.error('Error al obtener los administradores:', error);
             res.status(500).json({ mensaje: 'Error interno del servidor' });

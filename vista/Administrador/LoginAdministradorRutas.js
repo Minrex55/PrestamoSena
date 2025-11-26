@@ -12,7 +12,7 @@ class LoginAdministradorRutas {
     }
 
     configurarRutas() {
-        this.router.post('/login', LoginAdministrador.login);
+        this.router.post('/login', LoginAdministrador.login); //Ready
     }
 
     obtenerRutas() {

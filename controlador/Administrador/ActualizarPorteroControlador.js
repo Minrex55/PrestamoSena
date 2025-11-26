@@ -1,4 +1,4 @@
-import EditarPorteroModelo from '../../modelo/Administrador/EditarPorteroModelo.js'; 
+import ActualizarPorteroModelo from '../../modelo/Administrador/ActualizarPorteroModelo.js'; 
 
 class ActualizarPorteroControlador {
     constructor() {
@@ -20,8 +20,9 @@ class ActualizarPorteroControlador {
 
     try {
       const datosActualizar = { documento, nombres, telefono, correopersonal, contrasena };
-      const porteroActualizado = await EditarPorteroModelo.editarPortero(idportero, datosActualizar);
+      const porteroActualizado = await ActualizarPorteroModelo.actualizarPortero(idportero, datosActualizar);
 
+      
 
       return res.status(200).json({
         mensaje: 'Portero actualizado exitosamente',
@@ -29,6 +30,14 @@ class ActualizarPorteroControlador {
       });
 
     } catch (error) {
+
+      // Detectar errores comunes (ej. violación de unicidad)
+      if (error.message.includes('duplicate key') || error.message.includes('llave duplicada')) {
+        return res.status(409).json({
+          error: 'El documento, telefono ov correo ya están registrados.'
+        });
+      }
+
       console.error('Error en editarPortero:', error);
       return res.status(500).json({
         error: error.message || 'Error al actualizar el portero.'

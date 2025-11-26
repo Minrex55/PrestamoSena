@@ -20,7 +20,7 @@ class CrearAdministradorControlador {
 
     try {
       // Llama al método estático del modelo para crear el Administrador (con bcrypt)
-      const AdministradorCreado = await CrearAdministradorModelo.crear(documento,nombres,telefono,correopersonal,contrasena);
+      const AdministradorCreado = await CrearAdministradorModelo.crearAdministrador({documento,nombres,telefono,correopersonal,contrasena});
 
       // Eliminamos la contraseña del objeto antes de enviarlo (buena práctica)
       const { contrasena: _, ...AdministradorSeguro } = AdministradorCreado;
@@ -34,7 +34,7 @@ class CrearAdministradorControlador {
       // Detectar errores comunes (ej. violación de unicidad)
       if (error.message.includes('duplicate key') || error.message.includes('llave duplicada')) {
         return res.status(409).json({
-          error: 'El documento o correo ya están registrados.'
+          error: 'El documento, telefono o correo ya están registrados.'
         });
       }
 

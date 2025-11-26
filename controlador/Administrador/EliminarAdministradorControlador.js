@@ -5,22 +5,23 @@ class EliminarAdministradorControlador {
     if (EliminarAdministradorControlador.instance) {
       return EliminarAdministradorControlador.instance;
     }
+  
     EliminarAdministradorControlador.instance = this;
   }
   // Método para eliminar un portero existente
   async eliminarAdministrador(req, res) {
-    const { id } = req.params;
+    const { idadmin } = req.params;
 
     try {
-      const resultado = await EliminarAdministradorModelo.eliminarAdministrador(id);
-      if (resultado.rowCount === 0) {
+      const resultado = await EliminarAdministradorModelo.eliminarAdministrador(idadmin);
+      if (!resultado) {
         return res.status(404).json({
           error: 'Administrador no encontrado.'
         });
       }
 
       return res.status(200).json({
-        mensaje: 'Administrador eliminado exitosamente'
+        resultado
       });
 
     } catch (error) {

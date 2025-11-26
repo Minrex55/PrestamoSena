@@ -1,37 +1,31 @@
-import db from '../bd/Conexion.js';
-import bcrypt from 'bcrypt';
+import db from "../bd/Conexion.js";
+import bcrypt from "bcrypt";
 
 class LoginAdministradorModelo {
-  // Método estático para autenticar un portero
-  static async login(correopersonal, contrasena) {
-    // 1. Validar que los parámetros no estén vacíos (opcional, pero recomendado)
+    static async login(correopersonal, contrasena) {
+    
     if (!correopersonal || !contrasena) {
-      throw new Error('Correo y contraseña son requeridos');
+        throw new Error('Correo y contraseña son requeridos');
     }
 
-    // 2. Buscar al portero por correo y rol
-    const query = 'SELECT * FROM administrador WHERE correopersonal = $1 AND rol = $2';
+    const query = `SELECT * FROM administrador WHERE correopersonal = $1 AND rol = $2`;
     const values = [correopersonal, 'Administrador'];
+    const resultado = await db.query(query, values);
 
-    const result = await db.query(query, values);
-
-    // 3. Si no existe, error genérico (seguridad)
-    if (result.rows.length === 0) {
-      throw new Error('Credenciales incorrectas');
+    if (resultado.rows.length === 0) {
+        throw new Error('Credenciales incorrectas');
     }
 
-    const Administrador = result.rows[0];
+    const administrador = resultado.rows[0];
+    const validacion = await bcrypt.compare(contrasena, administrador.contrasena);
 
-    // 4. Comparar la contraseña con el hash almacenado
-    const esValida = await bcrypt.compare(contrasena, Administrador.contrasena);
-    if (!esValida) {
-      throw new Error('Credenciales incorrectas');
+    if (!validacion) {
+        throw new Error('Credenciales incorrectas');
     }
 
-    // 5. Devolver los datos seguros (sin contraseña)
-    const { contrasena: _, ...porteroSeguro } = Administrador;
-    return porteroSeguro;
-  }
+    const {contrasena: _, ...administradorSeguro} = administrador;
+    return administradorSeguro;
+    }
 }
 
 export default LoginAdministradorModelo;

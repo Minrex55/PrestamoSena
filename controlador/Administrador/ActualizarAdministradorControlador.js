@@ -1,4 +1,4 @@
-import EditarAdministradorModelo from '../../modelo/Administrador/EditarAdministradorModelo.js'; 
+import ActualizarAdministradorModelo from '../../modelo/Administrador/ActualizarAdministradorModelo.js'; 
 
 class ActualizarAdministradorControlador {
     constructor() {
@@ -20,7 +20,7 @@ class ActualizarAdministradorControlador {
 
     try {
       const datosActualizar = { documento, nombres, telefono, correopersonal, contrasena };
-      const AdministradorActualizado = await EditarAdministradorModelo.editarAdministrador(idadmin, datosActualizar);
+      const AdministradorActualizado = await ActualizarAdministradorModelo.actualizarAdministrador(idadmin, datosActualizar);
 
 
       return res.status(200).json({

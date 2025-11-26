@@ -20,7 +20,7 @@ class CrearPorteroControlador {
 
     try {
       // Llama al método estático del modelo para crear el portero (con bcrypt)
-      const porteroCreado = await CrearPorteroModelo.crear(documento,nombres,telefono,correopersonal,contrasena);
+      const porteroCreado = await CrearPorteroModelo.crearPortero({documento,nombres,telefono,correopersonal,contrasena});
 
       // Eliminamos la contraseña del objeto antes de enviarlo (buena práctica)
       const { contrasena: _, ...porteroSeguro } = porteroCreado;
@@ -35,7 +35,7 @@ class CrearPorteroControlador {
       // Cambiar esta validacion
       if (error.message.includes('duplicate key') || error.message.includes('llave duplicada')) {
         return res.status(409).json({
-          error: 'El documento o correo ya están registrados.'
+          error: 'El documento, telefono o correo ya están registrados.'
         });
       }
 

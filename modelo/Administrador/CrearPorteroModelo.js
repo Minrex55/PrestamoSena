@@ -11,7 +11,7 @@ class CrearPorteroModelo {
     }
 
     async crearPortero(portero) {
-        const {documento,nombres,telefono,correopersonal,contrasena,} = portero
+        const {documento,nombres,telefono,correopersonal,contrasena} = portero
 
         const query = `INSERT INTO portero (documento, nombres, telefono, correopersonal, contrasena)
         VALUES ($1, $2, $3, $4, $5)

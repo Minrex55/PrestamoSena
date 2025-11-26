@@ -1,28 +1,36 @@
-import db from '../bd/Conexion.js';
+import Conexion from '../bd/Conexion.js';
 
 class EliminarPorteroModelo {
-  static async eliminarPortero(id) {
-    // 1️⃣ Verificar si existe y si es portero
-    const checkQuery = 'SELECT rol FROM portero WHERE idportero = $1';
-    const checkResult = await db.query(checkQuery, [id]);
-
-    if (checkResult.rows.length === 0) {
-      throw new Error('Portero no encontrado.');
+  constructor() {
+    if (EliminarPorteroModelo.instance) {
+      return EliminarPorteroModelo.instance
     }
+    this.db = Conexion;
+    EliminarPorteroModelo.instance = this;
+  }
 
-    if (checkResult.rows[0].rol !== 'Portero') {
-      throw new Error('Solo se pueden eliminar porteros.');
-    }
-
-    // 2️⃣ Si pasa la verificación, eliminar
+  async eliminarPortero(idportero) {
+    const query = `DELETE FROM portero WHERE idportero = $1 RETURNING *`;
     try {
-      const result = await db.query('DELETE FROM portero WHERE idportero = $1', [id]);
-      return result.rowCount > 0; // true si eliminó, false si no
-    } catch (error) {
-      console.error('Error al eliminar el portero:', error);
-      throw error;
+      const resultado = await this.db.query(query, [idportero]);
+
+      if (resultado.rowCount === 0) {
+        return {
+        exito: false,
+        mensaje: `El portero con ID ${idportero} no existe`
+        } 
+      }
+
+      return {
+        exito: true,
+        mensaje: `Portero eliminado correctamente`,
+        data: resultado.rows[0]
+      }
+
+    }catch(error) {
+      console.error('Error al eliminar el portero', error)
     }
   }
 }
 
-export default EliminarPorteroModelo;
+export default new EliminarPorteroModelo();
