@@ -57,10 +57,13 @@ class CrearInvitadoControlador {
             };
 
             const invitadoCreado = await CrearInvitadoModelo.crearInvitado(invitado);
-            res.status(201).json(invitadoCreado);
+            res.status(201).json({
+                mensaje: "Invitado creado correctamente",
+                invitadoCreado
+            });
         } catch (error) {
-            console.error('Error al crear el usuario', error);
-            res.status(500).json({ mensaje: 'Error al crear el usuario' });
+            console.error('Error al crear el invitado', error);
+            res.status(500).json({ mensaje: 'Error al crear el invitado' });
         }
     }
 }

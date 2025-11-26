@@ -52,15 +52,18 @@ class ActualizarInvitadoControlador {
                 contrasena: hash
             }
             
-            const usuarioEditado = await ActualizarInvitadoModelo.actualizarInvitado(idinvitado, invitado);
+            const invitadoActualizado = await ActualizarInvitadoModelo.actualizarInvitado(idinvitado, invitado);
     
-            if (!usuarioEditado) {
+            if (!invitadoActualizado) {
                 return res.status(404).json({ mensaje: 'Usuario no encontrado' });
             }
-                res.status(200).json(usuarioEditado);
+                res.status(200).json({
+                    mensaje: "Invitado actualizado correctamente",
+                    invitadoActualizado
+                });
             } catch (error) {
-                console.error('Error al editar el usuario', error);
-                res.status(500).json({ mensaje: 'Error al editar el usuario' });
+                console.error('Error al editar el invitado', error);
+                res.status(500).json({ mensaje: 'Error al editar el invitado' });
         }
     }
 }

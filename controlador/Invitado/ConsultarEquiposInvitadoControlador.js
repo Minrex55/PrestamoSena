@@ -11,9 +11,13 @@ class ConsultarEquiposInvitadoControlador {
 
     async obtenerEquiposPorInvitado(req, res) {
         const { idinvitado } = req.params;
+        
         try {
             const equipos = await ConsultarEquiposInvitadoModelo.obtenerEquiposPorInvitado(idinvitado);
-            res.json(equipos);
+            res.json({
+                mensaje: "Equipos obtenidos:",
+                equipos
+            });
         } catch (error) {
             res.status(500).json({ mensaje: 'Error al obtener los equipos del invitado' });
         }

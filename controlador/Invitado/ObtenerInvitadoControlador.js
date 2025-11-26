@@ -17,14 +17,17 @@ class ObtenerInvitadoControlador {
         }
 
         try {
-            const usuario = await ObtenerInvitadoModelo.obtenerInvitadoPorId(idinvitado);
-            if (!usuario) {
+            const invitado = await ObtenerInvitadoModelo.obtenerInvitadoPorId(idinvitado);
+            if (!invitado) {
                 return res.status(404).json({ mensaje: 'Usuario no encontrado' });
             }
-            res.status(200).json(usuario);
+            res.status(200).json({
+                mensaje: "Invitado obtenido correctamente",
+                invitado
+            });
         } catch (error) {
-            console.error('Error al obtener el usuario', error);
-            res.status(500).json({ mensaje: 'Error al obtener el usuario' });
+            console.error('Error al obtener el invitado', error);
+            res.status(500).json({ mensaje: 'Error al obtener el invitado' });
         }
     }
 }
