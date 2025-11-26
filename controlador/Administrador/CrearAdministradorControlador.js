@@ -8,6 +8,7 @@ class CrearAdministradorControlador {
         CrearAdministradorControlador.instance = this;
     }
 
+    
     async crearAdministrador(req, res) {
     const { t1: documento, t2: nombres, t3: telefono, t4: correopersonal, t5: contrasena } = req.body;
 
@@ -16,6 +17,11 @@ class CrearAdministradorControlador {
         error: 'Los campos documento, nombres, correo y contraseña son obligatorios.'
       });
     }
+
+    const validacionAdministrador = await CrearAdministradorModelo.validacionAdministrador(documento, telefono, correopersonal);
+      if (validacionAdministrador) {
+          return res.status(409).json({mensaje: 'El administrador con ese documento, correo o telefono ya existe'})
+      }
 
     try {
       const AdministradorCreado = await CrearAdministradorModelo.crearAdministrador({documento,nombres,telefono,correopersonal,contrasena});
@@ -27,13 +33,6 @@ class CrearAdministradorControlador {
       });
 
     } catch (error) {
-
-      if (error.message.includes('duplicate key') || error.message.includes('llave duplicada')) {
-        return res.status(409).json({
-          error: 'El documento, telefono o correo ya están registrados.'
-        });
-      }
-
       console.error('Error en crear Administrador:', error);
       return res.status(500).json({
         error: 'Error interno al crear el Administrador.'
