@@ -20,24 +20,18 @@ class AdministradorRutas {
         this.configurarRutas();
         AdministradorRutas.instance = this;
     }
-     configurarRutas() {
-// ---------------------
-// RUTAS ADMINISTRADORES
-// ---------------------
-this.router.post('/crear', CrearAdministradorControlador.crearAdministrador); //ready
-this.router.delete('/eliminar/:idadmin', EliminarAdministradorControlador.eliminarAdministrador);//ready
-this.router.put('/editar/:idadmin', ActualizarAdministradorControlador.editarAdministrador);//ready
-this.router.get('/buscar', ObtenerAdministradorControlador.obtenerAdministradores);//ready
-this.router.get('/buscar/:idadmin', ObtenerAdministradorControlador.obtenerAdministradorPorId);//ready
-// -------------------------------
-// RUTAS RELACIONADAS CON PORTEROS
-// -------------------------------
-this.router.post('/portero/crear', CrearPorteroControlador.crearPortero);//ready
-this.router.delete('/portero/eliminar/:idportero', EliminarPorteroControlador.eliminarPortero);//ready
-this.router.put('/portero/editar/:idportero', ActualizarPorteroControlador.editarPortero);//ready
-this.router.get('/portero/buscar', ObtenerPorteroControlador.mostrarTodosLosPorteros);//ready
-this.router.get('/portero/buscar/:idportero', ObtenerPorteroControlador.obtenerPorteroPorId);//ready
-     }
+        configurarRutas() {
+            this.router.post('/crear', CrearAdministradorControlador.crearAdministrador);
+            this.router.delete('/eliminar/:idadmin', EliminarAdministradorControlador.eliminarAdministrador);
+            this.router.put('/editar/:idadmin', ActualizarAdministradorControlador.editarAdministrador);
+            this.router.get('/buscar', ObtenerAdministradorControlador.obtenerAdministradores);
+            this.router.get('/buscar/:idadmin', ObtenerAdministradorControlador.obtenerAdministradorPorId);
+            this.router.post('/portero/crear', CrearPorteroControlador.crearPortero);
+            this.router.delete('/portero/eliminar/:idportero', EliminarPorteroControlador.eliminarPortero);
+            this.router.put('/portero/editar/:idportero', ActualizarPorteroControlador.editarPortero);
+            this.router.get('/portero/buscar', ObtenerPorteroControlador.mostrarTodosLosPorteros);
+            this.router.get('/portero/buscar/:idportero', ObtenerPorteroControlador.obtenerPorteroPorId);
+        }
 
     obtenerRutas() {
         return this.router;

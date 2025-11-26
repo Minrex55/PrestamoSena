@@ -8,7 +8,7 @@ class EliminarAdministradorControlador {
   
     EliminarAdministradorControlador.instance = this;
   }
-  // Método para eliminar un portero existente
+
   async eliminarAdministrador(req, res) {
     const { idadmin } = req.params;
 
@@ -33,5 +33,4 @@ class EliminarAdministradorControlador {
   }
 }
 
-// Exportamos una instancia única del controlador 
 export default new EliminarAdministradorControlador();

@@ -9,7 +9,7 @@ class ObtenerPorteroModelo {
         ObtenerPorteroModelo.instance = this;
     }
 
-   async mostrarTodos() {
+    async mostrarTodos() {
     const query = `SELECT * FROM portero ORDER BY idportero;`
       try {
         const result = await this.db.query(query);

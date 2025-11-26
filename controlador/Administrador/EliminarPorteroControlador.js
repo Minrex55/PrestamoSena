@@ -8,8 +8,6 @@ class EliminarPorteroControlador {
     EliminarPorteroControlador.instance = this;
   }
 
-  // Método para eliminar un portero existente
-
   async eliminarPortero(req, res) {
       const { idportero } = req.params;
 
@@ -32,7 +30,6 @@ class EliminarPorteroControlador {
       });
     }
   }
-
 }
 
 export default new EliminarPorteroControlador();

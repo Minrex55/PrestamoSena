@@ -11,7 +11,6 @@ class ActualizarPorteroControlador {
     const { idportero } = req.params;
     const { t1: documento, t2: nombres, t3: telefono, t4: correopersonal, t5: contrasena } = req.body;
 
-    // Validación básica
     if (!documento || !nombres || !telefono || !correopersonal || !contrasena) {
       return res.status(400).json({
         error: 'Los campos documento, nombres, telefono, correo y contraseña son obligatorios.'
@@ -22,8 +21,6 @@ class ActualizarPorteroControlador {
       const datosActualizar = { documento, nombres, telefono, correopersonal, contrasena };
       const porteroActualizado = await ActualizarPorteroModelo.actualizarPortero(idportero, datosActualizar);
 
-      
-
       return res.status(200).json({
         mensaje: 'Portero actualizado exitosamente',
         portero: porteroActualizado
@@ -31,7 +28,6 @@ class ActualizarPorteroControlador {
 
     } catch (error) {
 
-      // Detectar errores comunes (ej. violación de unicidad)
       if (error.message.includes('duplicate key') || error.message.includes('llave duplicada')) {
         return res.status(409).json({
           error: 'El documento, telefono ov correo ya están registrados.'

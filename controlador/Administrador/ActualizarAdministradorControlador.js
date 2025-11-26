@@ -11,7 +11,6 @@ class ActualizarAdministradorControlador {
     const { idadmin } = req.params;
     const { t1: documento, t2: nombres, t3: telefono, t4: correopersonal, t5: contrasena } = req.body;
 
-    // Validación básica
     if (!documento || !nombres || !telefono || !correopersonal || !contrasena) {
       return res.status(400).json({
         error: 'Los campos documento, nombres, telefono, correo y contraseña son obligatorios.'
@@ -21,7 +20,6 @@ class ActualizarAdministradorControlador {
     try {
       const datosActualizar = { documento, nombres, telefono, correopersonal, contrasena };
       const AdministradorActualizado = await ActualizarAdministradorModelo.actualizarAdministrador(idadmin, datosActualizar);
-
 
       return res.status(200).json({
         mensaje: 'Administrador actualizado exitosamente',
@@ -35,7 +33,6 @@ class ActualizarAdministradorControlador {
       });
     }
   }
-
 }
 
 export default new ActualizarAdministradorControlador();

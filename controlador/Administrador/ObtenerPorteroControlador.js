@@ -25,7 +25,6 @@ class ObtenerPorteroControlador {
         }
     }
 
-    // Método para mostrar todos los porteros
     async mostrarTodosLosPorteros(req, res) {
         try {
             const obtenerPorteros = await ObtenerPorteroModelo.mostrarTodos();

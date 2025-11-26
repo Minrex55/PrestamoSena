@@ -7,9 +7,9 @@ class ObtenerAdministradorControlador {
         }
         ObtenerAdministradorControlador.instance = this;
     }
-    // Método para buscar un administrador por id 
+
     async obtenerAdministradorPorId(req, res) {
-        const { idadmin } = req.params; // Obtener el id desde los parámetros de la solicitud
+        const { idadmin } = req.params;
 
         try {
             const administrador = await ObtenerAdministradorModelo.buscarporId(idadmin);
@@ -25,7 +25,6 @@ class ObtenerAdministradorControlador {
         }
     }
 
-    // Método para mostrar todos los administradores
     async obtenerAdministradores(req, res) {
 
         try {
@@ -38,5 +37,4 @@ class ObtenerAdministradorControlador {
     }
 }
 
-// Exportamos una instancia única del controlador (opcional, pero común en POO + Express)
 export default new ObtenerAdministradorControlador();
