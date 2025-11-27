@@ -1,5 +1,4 @@
 import express from 'express';
-import ActualizarPorteroControlador from '../../controlador/Portero/ActualizarPorteroControlador.js'
 import ObtenerEquipoControlador from '../../controlador/Portero/ObtenerEquipoControlador.js'
 import ObtenerInvitadoControlador from '../../controlador/Portero/ObtenerInvitadoControlador.js'
 import CrearEquipoControlador from '../../controlador/Portero/CrearEquipoControlador.js'
@@ -21,8 +20,8 @@ class PorteroRutas {
     this.router.post('/equipo/crear', CrearEquipoControlador.crearEquipo);
     this.router.get('/equipo/modelo', ObtenerEquipoControlador.obtenerEquipoPorModelo);
     this.router.get('/equipo/serial', ObtenerEquipoControlador.obtenerEquipoPorNumeroDeSerie);
-    this.router.get('/equipo', ObtenerEquipoControlador.obtenerEquipos);
-    this.router.get('/equipo/:idequipo', ObtenerEquipoControlador.obtenerEquipoPorId);
+    this.router.get('/equipo/buscar', ObtenerEquipoControlador.obtenerEquipos);
+    this.router.get('/equipo/buscar/:idequipo', ObtenerEquipoControlador.obtenerEquipoPorId);
     this.router.put('/equipo/actualizar/:idequipo', ActualizarEquipoControlador.actualizarEquipo);
     this.router.delete('/equipo/eliminar/:idequipo', EliminarEquipoControlador.eliminarEquipo);
     this.router.get('/invitado/documento', ObtenerInvitadoControlador.obtenerInvitadoPorDocumento);
@@ -30,7 +29,6 @@ class PorteroRutas {
     this.router.get('/invitado', ObtenerInvitadoControlador.obtenerInvitados);
     this.router.get('/invitado/:idinvitado', ObtenerInvitadoControlador.obtenerInvitadoPorId);
     this.router.delete('/invitado/eliminar/:idinvitado', EliminarInvitadoControlador.eliminarInvitado);
-    this.router.put('/actualizar/:idportero', ActualizarPorteroControlador.actualizarPortero);
 }
 
 

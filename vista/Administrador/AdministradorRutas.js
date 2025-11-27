@@ -23,12 +23,12 @@ class AdministradorRutas {
         configurarRutas() {
             this.router.post('/crear', CrearAdministradorControlador.crearAdministrador);
             this.router.delete('/eliminar/:idadmin', EliminarAdministradorControlador.eliminarAdministrador);
-            this.router.put('/editar/:idadmin', ActualizarAdministradorControlador.editarAdministrador);
+            this.router.put('/actualizar/:idadmin', ActualizarAdministradorControlador.editarAdministrador);
             this.router.get('/buscar', ObtenerAdministradorControlador.obtenerAdministradores);
             this.router.get('/buscar/:idadmin', ObtenerAdministradorControlador.obtenerAdministradorPorId);
             this.router.post('/portero/crear', CrearPorteroControlador.crearPortero);
             this.router.delete('/portero/eliminar/:idportero', EliminarPorteroControlador.eliminarPortero);
-            this.router.put('/portero/editar/:idportero', ActualizarPorteroControlador.editarPortero);
+            this.router.put('/portero/actualizar/:idportero', ActualizarPorteroControlador.editarPortero);
             this.router.get('/portero/buscar', ObtenerPorteroControlador.mostrarTodosLosPorteros);
             this.router.get('/portero/buscar/:idportero', ObtenerPorteroControlador.obtenerPorteroPorId);
         }

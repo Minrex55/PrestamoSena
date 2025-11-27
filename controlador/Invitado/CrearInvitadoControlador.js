@@ -50,7 +50,7 @@ class CrearInvitadoControlador {
 
             const invitado = { 
                 documento, 
-                nombres, 
+                nombres,        
                 telefono, 
                 correo, 
                 contrasena: hash 

@@ -12,6 +12,12 @@ class ActualizarEquipoControlador {
         const {idequipo} = req.params;
         const {t1: modelo, t2: numerodeserie, t3: idinvitado} = req.body;
 
+        if (!modelo || !numerodeserie || !idinvitado) {
+              return res.status(400).json({
+                error: 'Los campos modelo, numero de serie e id invitado son obligatorios.'
+              });
+            }
+
         try {
             const equipo = {modelo, numerodeserie, idinvitado}
             const equipoActualizado = await ActualizarEquipoModelo.actualizarEquipo(idequipo, equipo)

@@ -1,4 +1,5 @@
 import CrearAdministradorModelo from '../../modelo/Administrador/CrearAdministradorModelo.js';
+import bcrypt from "bcrypt"
 
 class CrearAdministradorControlador {
     constructor() {
@@ -24,7 +25,17 @@ class CrearAdministradorControlador {
       }
 
     try {
-      const AdministradorCreado = await CrearAdministradorModelo.crearAdministrador({documento,nombres,telefono,correopersonal,contrasena});
+      const saltRounds = 10;
+      const hash = await bcrypt.hash(contrasena, saltRounds);
+      
+      const administrador = { 
+        documento, 
+        nombres, 
+        telefono, 
+        correopersonal, 
+        contrasena: hash 
+                  };
+      const AdministradorCreado = await CrearAdministradorModelo.crearAdministrador(administrador);
       const { contrasena: _, ...AdministradorSeguro } = AdministradorCreado;
 
       return res.status(201).json({

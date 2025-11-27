@@ -10,6 +10,17 @@ class CrearPorteroModelo {
         CrearPorteroModelo.instance =  this;
     }
 
+    async validacionPortero(documento, telefono, correopersonal) {
+        const query = `SELECT * FROM portero WHERE documento = $1 OR correopersonal = $2 OR telefono = $3;`;
+
+        try {
+            const resultado = await this.db.query(query, [documento, correopersonal, telefono]);
+            return resultado.rows.length > 0;
+        }catch(error) {
+            console.log('Error al verificar el portero en la base de datos', error)
+        }
+    }
+
     async crearPortero(portero) {
         const {documento,nombres,telefono,correopersonal,contrasena} = portero
 

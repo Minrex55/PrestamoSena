@@ -1,4 +1,5 @@
 import ActualizarAdministradorModelo from '../../modelo/Administrador/ActualizarAdministradorModelo.js'; 
+import bcrypt from "bcrypt"
 
 class ActualizarAdministradorControlador {
     constructor() {
@@ -18,12 +19,23 @@ class ActualizarAdministradorControlador {
     }
 
     try {
-      const datosActualizar = { documento, nombres, telefono, correopersonal, contrasena };
-      const AdministradorActualizado = await ActualizarAdministradorModelo.actualizarAdministrador(idadmin, datosActualizar);
+      const saltRounds = 10;
+      const hash = await bcrypt.hash(contrasena, saltRounds)
 
+      const datosActualizar = { 
+        documento, 
+        nombres, 
+        telefono, 
+        correopersonal, 
+        contrasena: hash }
+        ;
+      const AdministradorActualizado = await ActualizarAdministradorModelo.actualizarAdministrador(idadmin, datosActualizar);
+      if (!AdministradorActualizado) {
+        return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+      }
       return res.status(200).json({
         mensaje: 'Administrador actualizado exitosamente',
-        Administrador: AdministradorActualizado
+        AdministradorActualizado
       });
 
     } catch (error) {

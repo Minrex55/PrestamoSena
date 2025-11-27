@@ -15,6 +15,11 @@ class CrearEquipoControlador{
       return res.status(400).json({ mensaje: 'Todos los campos son obligatorios.' });
     }
 
+    const validacionEquipo = await CrearEquipoModelo.validacionEquipo(numerodeserie);
+      if (validacionEquipo) {
+          return res.status(409).json({mensaje: 'El equipo con ese numero de serie ya existe'})
+      }
+
     try {
       const nuevoEquipo = await CrearEquipoModelo.crearEquipo({ modelo, numerodeserie, idinvitado });
 

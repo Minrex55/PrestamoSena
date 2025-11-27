@@ -9,7 +9,7 @@ class ActualizarAdministradorModelo {
         this.db = Conexion
         ActualizarAdministradorModelo.instance = this
     }
-
+    
     async actualizarAdministrador(idadmin, administrador) {
         const {documento, nombres, telefono, correopersonal, contrasena} = administrador;
         

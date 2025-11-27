@@ -1,4 +1,5 @@
 import ActualizarPorteroModelo from '../../modelo/Administrador/ActualizarPorteroModelo.js'; 
+import bcrypt from 'bcrypt';
 
 class ActualizarPorteroControlador {
     constructor() {
@@ -16,9 +17,19 @@ class ActualizarPorteroControlador {
         error: 'Los campos documento, nombres, telefono, correo y contraseña son obligatorios.'
       });
     }
-
+    
     try {
-      const datosActualizar = { documento, nombres, telefono, correopersonal, contrasena };
+     const saltRounds = 10;
+          const hash = await bcrypt.hash(contrasena, saltRounds)
+    
+          const datosActualizar = { 
+            documento, 
+            nombres, 
+            telefono, 
+            correopersonal, 
+            contrasena: hash }
+            ;
+
       const porteroActualizado = await ActualizarPorteroModelo.actualizarPortero(idportero, datosActualizar);
 
       return res.status(200).json({
@@ -27,13 +38,6 @@ class ActualizarPorteroControlador {
       });
 
     } catch (error) {
-
-      if (error.message.includes('duplicate key') || error.message.includes('llave duplicada')) {
-        return res.status(409).json({
-          error: 'El documento, telefono ov correo ya están registrados.'
-        });
-      }
-
       console.error('Error en editarPortero:', error);
       return res.status(500).json({
         error: error.message || 'Error al actualizar el portero.'

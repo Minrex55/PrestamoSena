@@ -1,4 +1,5 @@
 import CrearPorteroModelo from '../../modelo/Administrador/CrearPorteroModelo.js';
+import bcrypt from "bcrypt"
 
 class CrearPorteroControlador {
     constructor() {
@@ -17,8 +18,22 @@ class CrearPorteroControlador {
       });
     }
 
+    const validacionPortero = await CrearPorteroModelo.validacionPortero(documento, telefono, correopersonal);
+          if (validacionPortero) {
+              return res.status(409).json({mensaje: 'El portero con ese documento, correo o telefono ya existe'})
+          }
+
     try {
-      const porteroCreado = await CrearPorteroModelo.crearPortero({documento,nombres,telefono,correopersonal,contrasena});
+      const saltRounds = 10;
+      const hash = await bcrypt.hash(contrasena, saltRounds);
+      const portero = { 
+        documento, 
+        nombres, 
+        telefono, 
+        correopersonal, 
+        contrasena: hash 
+      };
+      const porteroCreado = await CrearPorteroModelo.crearPortero(portero);
       const { contrasena: _, ...porteroSeguro } = porteroCreado;
 
       return res.status(201).json({
@@ -27,13 +42,6 @@ class CrearPorteroControlador {
       });
 
     } catch (error) {
-      
-      if (error.message.includes('duplicate key') || error.message.includes('llave duplicada')) {
-        return res.status(409).json({
-          error: 'El documento, telefono o correo ya están registrados.'
-        });
-      }
-
       console.error('Error en crearPortero:', error);
       return res.status(500).json({
         error: 'Error interno al crear el portero.'

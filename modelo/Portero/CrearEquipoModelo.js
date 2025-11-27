@@ -9,6 +9,17 @@ class CrearEquipoModelo {
       CrearEquipoModelo.instance = this;
     }
 
+    async validacionEquipo(numerodeserie) {
+        const query = `SELECT * FROM equipos WHERE numerodeserie = $1;`;
+
+        try {
+            const resultado = await this.db.query(query, [numerodeserie]);
+            return resultado.rows.length > 0;
+        }catch(error) {
+            console.log('Error al verificar el equipo en la base de datos', error)
+        }
+    }
+
     async crearEquipo(equipos) {
       const {modelo, numerodeserie, idinvitado} = equipos
       const query = `INSERT INTO equipos (modelo, numerodeserie, idinvitado) VALUES ($1, $2, $3) RETURNING *;`
