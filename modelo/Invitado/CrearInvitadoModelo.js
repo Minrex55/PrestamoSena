@@ -17,7 +17,7 @@ class CrearInvitadoModelo {
             const resultado = await this.db.query(query, [documento, telefono, correo]);
             return resultado.rows.length > 0;
         }catch(error) {
-            console.log('Error al verificar el usuario en la base de datos', error)
+            console.log('Error al verificar el invitado en la base de datos', error)
         }
     }
 
@@ -42,7 +42,7 @@ class CrearInvitadoModelo {
             const resultado = await this.db.query(query, valores);
             return resultado.rows[0];
         }catch(error){
-            console.log('Error al crear usuario')
+            console.log('Error al crear invitado')
             throw error;
         }
     }

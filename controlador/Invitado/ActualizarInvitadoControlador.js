@@ -55,15 +55,15 @@ class ActualizarInvitadoControlador {
             const invitadoActualizado = await ActualizarInvitadoModelo.actualizarInvitado(idinvitado, invitado);
     
             if (!invitadoActualizado) {
-                return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+                return res.status(404).json({ mensaje: 'Invitado no encontrado' });
             }
                 res.status(200).json({
                     mensaje: "Invitado actualizado correctamente",
                     invitadoActualizado
                 });
             } catch (error) {
-                console.error('Error al editar el invitado', error);
-                res.status(500).json({ mensaje: 'Error al editar el invitado' });
+                console.error('Error al actualizar el invitado', error);
+                res.status(500).json({ mensaje: 'Error al actualizar el invitado' });
         }
     }
 }

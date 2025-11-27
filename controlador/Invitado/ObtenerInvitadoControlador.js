@@ -19,7 +19,7 @@ class ObtenerInvitadoControlador {
         try {
             const invitado = await ObtenerInvitadoModelo.obtenerInvitadoPorId(idinvitado);
             if (!invitado) {
-                return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+                return res.status(404).json({ mensaje: 'Invitado no encontrado' });
             }
             res.status(200).json({
                 mensaje: "Invitado obtenido correctamente",

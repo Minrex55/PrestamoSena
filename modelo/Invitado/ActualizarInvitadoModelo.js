@@ -21,8 +21,7 @@ class ActualizarInvitadoModelo {
             const resultado = await this.db.query(query, valores);
             return resultado.rows[0];
         }catch(error) {
-            console.error("Error al editar usuario", error);
-            throw error;
+            console.error("Error al actualizar el invitado", error);
         }
     }
 }

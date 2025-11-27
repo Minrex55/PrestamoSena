@@ -16,7 +16,7 @@ class ObtenerInvitadoModelo {
             const resultado = await this.db.query(query, [idinvitado]);
             return resultado.rows[0] || null;
         } catch (error) {
-            console.error('Error al obtener usuario', error);
+            console.error('Error al obtener invitado', error);
         }
     }
 }
