@@ -1,0 +1,131 @@
+:root {
+    --sena-green: #018102;
+    --sena-green-dark: #016602;
+    --sena-white: #ffffff;
+    --text-color: #333;
+    --gray-border: #ccc;
+    --error-color: #d32f2f;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--sena-green);
+    background-image: linear-gradient(135deg, #018102 0%, #005c01 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Tarjeta ancha (600px) como pediste */
+.register-card {
+    background-color: var(--sena-white);
+    width: 100%;
+    max-width: 600px; 
+    padding: 2.5rem 3rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.header { margin-bottom: 1.5rem; }
+
+.logo-container {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 10px auto;
+}
+
+.logo-img { width: 100%; height: auto; object-fit: contain; }
+
+.header h1 { color: var(--sena-green); margin-bottom: 5px; }
+
+/* Grid para poner 2 inputs en una fila en pantallas grandes */
+.row-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.input-group {
+    margin-bottom: 1.2rem;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid var(--gray-border);
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-group input:focus {
+    border-color: var(--sena-green);
+    box-shadow: 0 0 0 3px rgba(1, 129, 2, 0.2);
+}
+
+/* Estilos de Error */
+.input-group.error input {
+    border-color: var(--error-color);
+}
+
+.error-message {
+    color: var(--error-color);
+    font-size: 0.8rem;
+    visibility: hidden; /* Oculto por defecto */
+    margin-top: 5px;
+    display: block;
+}
+
+.input-group.error .error-message {
+    visibility: visible;
+}
+
+/* Botón */
+.btn-register {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--sena-green);
+    color: var(--sena-white);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.btn-register:hover { background-color: var(--sena-green-dark); }
+
+.footer-links { margin-top: 1.5rem; font-size: 0.9rem; }
+.footer-links a { color: var(--sena-green); text-decoration: none; font-weight: bold; }
+
+/* Responsive: En celular, la fila de 2 columnas se vuelve 1 columna */
+@media (max-width: 550px) {
+    .row-group {
+        grid-template-columns: 1fr;
+    }
+    .register-card {
+        padding: 1.5rem;
+    }
+}
+

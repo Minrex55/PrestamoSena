@@ -1,0 +1,158 @@
+/* Reset básico y variables */
+:root {
+    --sena-green: #018102; /* Color solicitado */
+    --sena-green-dark: #016602;
+    --sena-white: #ffffff;
+    --text-color: #333;
+    --gray-border: #ccc;
+    --background-bg: #f4f4f4;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--sena-green);
+    /* Opcional: Un fondo con imagen suave o patrón */
+    background-image: linear-gradient(135deg, #018102 0%, #005c01 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Contenedor de la tarjeta */
+.login-card {
+    background-color: var(--sena-white);
+    width: 100%;
+    max-height: 90vh;
+    max-width: 600px; 
+    padding: 4rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+/* Cabecera y Logo */
+.header {
+    margin-bottom: 2rem;
+}
+
+.logo-container {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 15px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.header h1 {
+    color: var(--sena-green);
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+}
+
+.header p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Estilos de Inputs */
+.input-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-color);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--gray-border);
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-group input:focus {
+    border-color: var(--sena-green);
+    box-shadow: 0 0 0 3px rgba(1, 129, 2, 0.2);
+}
+
+/* Botón */
+.actions {
+    margin-top: 1rem;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--sena-green);
+    color: var(--sena-white);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-login:hover {
+    background-color: var(--sena-green-dark);
+}
+
+.btn-login:active {
+    transform: scale(0.98);
+}
+
+/* Enlaces del pie */
+.footer-links {
+    margin-top: 1.5rem;
+}
+
+.footer-links p {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+.footer-links a {
+    color: var(--sena-green);
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+/* Media Query para móviles muy pequeños */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 1.5rem;
+    }
+    
+    .header h1 {
+        font-size: 1.5rem;
+    }
+}
+
