@@ -11,9 +11,19 @@ class CrearEquipoControlador{
     async crearEquipo(req, res) {
       const {t1: modelo, t2: numerodeserie, t3: idinvitado} = req.body
 
-      if (!modelo || !numerodeserie || !idinvitado) {
-      return res.status(400).json({ mensaje: 'Todos los campos son obligatorios.' });
-    }
+      if (!modelo?.trim() || !numerodeserie?.trim() || !idinvitado?.trim()) {
+        return res.status(400).json({ mensaje: 'Todos los campos son obligatorios' });
+      }       
+
+      const validacionModelo = /^[A-Za-z0-9\-_ ]{10,30}$/;
+      if (!validacionModelo.test(modelo.trim())) {
+        return res.status(400).json({ mensaje: 'El modelo debe tener entre 10 y 30 caracteres' });
+      }
+
+      const validacionNumeroSerie = /^[A-Za-z0-9-]{8,15}$/;
+      if (!validacionNumeroSerie.test(numerodeserie.trim())) {
+        return res.status(400).json({ mensaje: 'El número de serie debe tener entre 8 y 15 caracteres' });
+      }
 
     const validacionEquipo = await CrearEquipoModelo.validacionEquipo(numerodeserie);
       if (validacionEquipo) {
