@@ -1,0 +1,235 @@
+/* Reset básico y variables */
+        :root {
+            --sena-green: #018102;
+            --sena-green-dark: #016602;
+            --sena-white: #ffffff;
+            --text-color: #333;
+            --gray-border: #ccc;
+            --error-color: #d32f2f;
+            --background-bg: #f4f4f4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--sena-green);
+            background-image: linear-gradient(135deg, #018102 0%, #005c01 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Contenedor de la tarjeta */
+        .login-card {
+            background-color: var(--sena-white);
+            width: 100%;
+            max-height: 95vh;
+            max-width: 600px; 
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            overflow-y: auto;
+        }
+
+        /* Cabecera y Logo */
+        .header {
+            margin-bottom: 2rem;
+        }
+
+        .logo-container {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 10px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .header h1 {
+            color: var(--sena-green);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Estilos de Inputs Generales */
+        .input-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--sena-green);
+            box-shadow: 0 0 0 3px rgba(1, 129, 2, 0.2);
+        }
+
+        /* Estilos de Error - Igual que el registro */
+        .input-group.error input {
+            border-color: var(--error-color);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.8rem;
+            visibility: hidden;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .input-group.error .error-message {
+            visibility: visible;
+        }
+
+        /* Fila Correo + Botón */
+        .form-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            margin-bottom: 1.2rem;
+        }
+
+        .input-group.flex-grow {
+            flex-grow: 1;
+            margin-bottom: 0;
+        }
+
+        .btn-side {
+            padding: 12px 20px;
+            background-color: var(--sena-green);
+            color: var(--sena-white);
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            height: 46px;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-side:hover {
+            background-color: var(--sena-green-dark);
+        }
+
+        .btn-side:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Botón Principal */
+        .actions {
+            margin-top: 1rem;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--sena-green);
+            color: var(--sena-white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-login:hover {
+            background-color: var(--sena-green-dark);
+        }
+
+        .btn-login:active {
+            transform: scale(0.98);
+        }
+
+        /* Enlaces del pie */
+        .footer-links {
+            margin-top: 1.5rem;
+        }
+
+        .footer-links p {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .footer-links a {
+            color: var(--sena-green);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Clases utilitarias */
+        .hidden {
+            display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-text {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 1.5rem;
+            }
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            .form-row {
+                flex-wrap: wrap;
+            }
+            .btn-side {
+                width: 100%;
+            }
+        }
