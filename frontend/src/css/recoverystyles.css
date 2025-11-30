@@ -72,8 +72,9 @@
 
         /* Estilos de Inputs Generales */
         .input-group {
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.5rem;
             text-align: left;
+            position: relative;
         }
 
         .input-group label {
@@ -110,6 +111,10 @@
             visibility: hidden;
             margin-top: 5px;
             display: block;
+            position: absolute;
+            bottom: -20px; /* Ajusta este valor si el texto queda muy pegado o separado */
+            left: 0;
+            width: 100%; /* Para que ocupe todo el ancho si el texto es largo */
         }
 
         .input-group.error .error-message {
@@ -121,7 +126,7 @@
             display: flex;
             align-items: flex-end;
             gap: 10px;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.8rem;
         }
 
         .input-group.flex-grow {
