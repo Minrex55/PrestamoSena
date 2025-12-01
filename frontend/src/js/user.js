@@ -203,9 +203,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (passInput.value !== '') {
             const val = passInput.value;
             const allReqsMet = (val.length >= 8) && 
-                               regexList.pass.upper.test(val) && 
-                               regexList.pass.num.test(val) && 
-                               regexList.pass.sym.test(val);
+            regexList.pass.upper.test(val) && 
+            regexList.pass.num.test(val) && 
+            regexList.pass.sym.test(val);
             
             if (!allReqsMet) {
                 alert('La contraseña no cumple con todos los requisitos de seguridad.');
