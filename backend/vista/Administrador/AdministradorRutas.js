@@ -1,4 +1,6 @@
 import express from 'express';
+import AuthMiddleware from "../../middlewares/AuthMiddleware.js";
+import RoleMiddleware from "../../middlewares/RoleMiddleware.js";
 const router = express.Router();
 
 import CrearPorteroControlador from '../../controlador/Administrador/CrearPorteroControlador.js';
@@ -21,6 +23,11 @@ class AdministradorRutas {
         AdministradorRutas.instance = this;
     }
         configurarRutas() {
+            // Proteger todas las rutas
+            this.router.use((req, res, next) => AuthMiddleware.autenticar(req, res, next));
+            this.router.use(RoleMiddleware.verificarRol('Administrador'));
+
+
             this.router.post('/crear', CrearAdministradorControlador.crearAdministrador);
             this.router.delete('/eliminar/:idadmin', EliminarAdministradorControlador.eliminarAdministrador);
             this.router.put('/actualizar/:idadmin', ActualizarAdministradorControlador.editarAdministrador);
