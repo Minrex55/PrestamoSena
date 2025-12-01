@@ -12,7 +12,7 @@ class ActualizarPorteroControlador {
     const { idportero } = req.params;
     const { t1: documento, t2: nombres, t3: telefono, t4: correopersonal, t5: contrasena } = req.body;
 
-    if (!documento?.trim() || !nombres?.trim() || !telefono?.trim() || !correo?.trim() || !contrasena) {
+    if (!documento?.trim() || !nombres?.trim() || !telefono?.trim() || !correopersonal?.trim() || !contrasena) {
       return res.status(400).json({ mensaje: 'Todos los campos son obligatorios' });
     }       
     
@@ -30,7 +30,7 @@ class ActualizarPorteroControlador {
     }
 
     const validacionCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!validacionCorreo.test(correo.trim())) {
+    if (!validacionCorreo.test(correopersonal.trim())) {
       return res.status(400).json({ mensaje: 'El correo es inválido' });
     }
 
@@ -39,7 +39,7 @@ class ActualizarPorteroControlador {
       return res.status(400).json({ mensaje: 'La contraseña debe tener al menos 8 caracteres, incluyendo una letra, un número y un carácter especial' });
     }
 
-    const validacionPortero = await ActualizarPorteroModelo.validacionPortero(documento, telefono, correopersonal);
+    const validacionPortero = await ActualizarPorteroModelo.validacionPorteroActualizar(documento, telefono, correopersonal, idportero);
     if (validacionPortero) {
       return res.status(409).json({mensaje: 'El portero con ese documento, correo o telefono ya existe'})
     }

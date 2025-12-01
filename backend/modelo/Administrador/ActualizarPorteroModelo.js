@@ -10,11 +10,11 @@ class ActualizarPorteroModelo {
         ActualizarPorteroModelo.instance = this
     }
 
-    async validacionPortero(documento, telefono, correopersonal) {
-        const query = `SELECT * FROM portero WHERE documento = $1 OR correopersonal = $2 OR telefono = $3;`;
+    async validacionPorteroActualizar(documento, telefono, correopersonal, idportero) {
+        const query = `SELECT * FROM portero WHERE (documento = $1 OR telefono = $2 OR correopersonal = $3) AND idportero != $4;`;
 
         try {
-            const resultado = await this.db.query(query, [documento, correopersonal, telefono]);
+            const resultado = await this.db.query(query, [documento, telefono, correopersonal, idportero]);
             return resultado.rows.length > 0;
         }catch(error) {
             console.log('Error al verificar el portero en la base de datos', error)

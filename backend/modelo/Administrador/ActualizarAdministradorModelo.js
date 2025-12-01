@@ -10,11 +10,11 @@ class ActualizarAdministradorModelo {
         ActualizarAdministradorModelo.instance = this
     }
 
-    async validacionAdministrador(documento, telefono, correopersonal) {
-        const query = `SELECT * FROM administrador WHERE documento = $1 OR correopersonal = $2 OR telefono = $3;`;
+    async validacionAdministradorActualizar(documento, telefono, correopersonal, idadmin) {
+        const query = `SELECT * FROM administrador WHERE (documento = $1 OR telefono = $2 OR correopersonal = $3) AND idadmin != $4;`;
 
         try {
-            const resultado = await this.db.query(query, [documento, correopersonal, telefono]);
+            const resultado = await this.db.query(query, [documento, telefono, correopersonal, idadmin]);
             return resultado.rows.length > 0;
         }catch(error) {
             console.log('Error al verificar el administrador en la base de datos', error)

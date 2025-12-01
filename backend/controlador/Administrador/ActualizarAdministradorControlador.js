@@ -39,11 +39,10 @@ class ActualizarAdministradorControlador {
       return res.status(400).json({ mensaje: 'La contraseña debe tener al menos 8 caracteres, incluyendo una letra, un número y un carácter especial' });
     }
 
-    //Organizar esta validacion
-    /*const validacionAdministrador = await ActualizarAdministradorModelo.validacionAdministrador(documento, telefono, correopersonal);
+    const validacionAdministrador = await ActualizarAdministradorModelo.validacionAdministradorActualizar(documento, telefono, correopersonal, idadmin);
     if (validacionAdministrador) {
       return res.status(409).json({mensaje: 'El administrador con ese documento, correo o telefono ya existe'})
-    }*/
+    }
 
     try {
       const saltRounds = 10;

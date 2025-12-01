@@ -10,11 +10,11 @@ class ActualizarInvitadoModelo {
         ActualizarInvitadoModelo.instance = this
     }
 
-    async validacionInvitado(documento, telefono, correo) {
-        const query = `SELECT * FROM invitado WHERE documento = $1 OR correopersonal = $2 OR telefono = $3;`;
+    async validacionInvitadoActualizar(documento, telefono, correo, idinvitado) {
+        const query = `SELECT * FROM invitado WHERE (documento = $1 OR telefono = $2 OR correopersonal = $3) AND idinvitado != $4;`;
 
         try {
-            const resultado = await this.db.query(query, [documento, correo, telefono]);
+            const resultado = await this.db.query(query, [documento, telefono, correo, idinvitado]);
             return resultado.rows.length > 0;
         }catch(error) {
             console.log('Error al verificar el invitado en la base de datos', error)

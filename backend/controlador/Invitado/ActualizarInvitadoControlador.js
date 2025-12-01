@@ -41,7 +41,7 @@ class ActualizarInvitadoControlador {
             return res.status(400).json({ mensaje: 'La contraseña debe tener al menos 8 caracteres, incluyendo una letra, un número y un carácter especial' });
         }
 
-        const validacionInvitado = await ActualizarInvitadoModelo.validacionInvitado(documento, correo, telefono)
+        const validacionInvitado = await ActualizarInvitadoModelo.validacionInvitadoActualizar(documento, telefono, correo, idinvitado)
         if (validacionInvitado) {
             return res.status(400).json({mensaje: "El invitado con ese documento, correo o telefono ya existe"})
         }
