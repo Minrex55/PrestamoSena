@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IngreSENA - Registro de Equipo</title>
+    
+    <!-- CSS Específico para esta vista -->
+    <link rel="stylesheet" href="./src/css/deviceregister.css">
+    
+    <link rel="shortcut icon" href="./src/media/logoSena.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="overlay" id="overlay"></div>
+
+    <div class="admin-container">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-wrapper">
+                    <img src="./src/media/logo_sena.png" alt="Logo SENA" class="sidebar-logo">
+                </div>
+                <h2>IngreSENA</h2>
+                <span class="role-badge">Portero</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <!-- Enlaces simulados para el rol de portero -->
+                    <li><a href="#" class="active"><i class="fas fa-laptop"></i> Registrar Equipo</a></li>
+                    <li><a href="#"><i class="fas fa-history"></i> Historial Ingresos</a></li>
+                    <li><a href="#"><i class="fas fa-qrcode"></i> Escanear QR</a></li>
+                    <li class="logout-item"><a href="index.html"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <header class="top-bar">
+                <button id="menu-toggle" class="menu-btn"><i class="fas fa-bars"></i></button>
+                <div class="user-info">
+                    <span>Turno: <strong>Mañana</strong></span>
+                    <div class="user-avatar"><i class="fas fa-user-shield"></i></div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                
+                <div class="card-form">
+                    <div class="card-header">
+                        <h3><i class="fas fa-laptop-medical"></i> Registrar Ingreso de Equipo</h3>
+                        <p>Ingrese los datos del computador portátil del visitante.</p>
+                    </div>
+                    
+                    <form id="pcForm" class="pc-form">
+                        
+                        <!-- Sección Datos del Equipo -->
+                        <div class="form-grid">
+                            
+                            <!-- Marca -->
+                            <div class="form-group">
+                                <label for="marca">Marca del Equipo <span class="required">*</span></label>
+                                <select id="marca" required>
+                                    <option value="" disabled selected>Seleccione una marca</option>
+                                    <option value="HP">HP</option>
+                                    <option value="Lenovo">Lenovo</option>
+                                    <option value="Dell">Dell</option>
+                                    <option value="Asus">Asus</option>
+                                    <option value="Acer">Acer</option>
+                                    <option value="Apple">Apple (MacBook)</option>
+                                    <option value="Samsung">Samsung</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+
+                            <!-- Modelo -->
+                            <div class="form-group">
+                                <label for="modelo">Referencia / Modelo <span class="required">*</span></label>
+                                <input type="text" id="modelo" placeholder="Ej: Pavilion 15, ThinkPad X1..." required minlength="3">
+                            </div>
+
+                            <!-- Serial (Validación importante) -->
+                            <div class="form-group full-width-mobile">
+                                <label for="serial">Número de Serial (S/N) <span class="required">*</span></label>
+                                <div class="input-icon-wrapper">
+                                    <input type="text" id="serial" placeholder="ABCD123456" required minlength="4" style="text-transform: uppercase;">
+                                    <i class="fas fa-barcode input-icon"></i>
+                                </div>
+                                <small>El serial se encuentra generalmente en la parte inferior del equipo.</small>
+                            </div>
+                        </div>
+
+                        <!-- Sección Carga de Fotos (Opcional) -->
+                        <div class="upload-section">
+                            <label class="upload-label">Evidencia Fotográfica (Opcional)</label>
+                            
+                            <div class="drop-zone" id="dropZone">
+                                <span class="drop-zone__prompt">
+                                    <i class="fas fa-cloud-upload-alt"></i> <br>
+                                    Arrastra las fotos aquí o haz clic para subir
+                                </span>
+                                <input type="file" name="myFile" id="fileInput" class="drop-zone__input" multiple accept="image/*">
+                            </div>
+
+                            <!-- Contenedor para previsualizar las miniaturas -->
+                            <div class="image-preview-container" id="previewContainer"></div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="form-actions">
+                            <button type="button" class="btn-cancel" onclick="window.location.reload()">Limpiar</button>
+                            <button type="submit" class="btn-save">Registrar Entrada</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="./src/js/deviceregister.js"></script>
+</body>
+</html>
