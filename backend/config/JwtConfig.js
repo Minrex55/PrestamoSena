@@ -1,4 +1,7 @@
 import jwt from 'jsonwebtoken';
+import {configDotenv} from 'dotenv'
+
+configDotenv();
 
 class JwtConfig {
   constructor() {

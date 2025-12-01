@@ -1,5 +1,5 @@
 import LoginPorteroModelo from '../../modelo/Portero/LoginPorteroModelo.js';
-import JwtConfig from '../../config/JwtConfig.js'; // ← AGREGAR ESTA LÍNEA
+//import JwtConfig from '../../config/JwtConfig.js'; // ← AGREGAR ESTA LÍNEA
 
 class LoginPorteroControlador {
   constructor() {
@@ -15,17 +15,17 @@ class LoginPorteroControlador {
       const Portero = await LoginPorteroModelo.login(correopersonal, contrasena);
       
       
-      const token = JwtConfig.generarToken({
+      /*const token = JwtConfig.generarToken({
         id: Portero._id || Portero.id || Portero.documento,
         email: Portero.correopersonal,
         rol: 'Portero',
         nombre: Portero.nombres
-      });
+      });*/
       
       
       return res.status(200).json({
         mensaje: 'Inicio de sesión exitoso',
-        token, 
+        //token, 
         Portero
       });
     } catch (error) {

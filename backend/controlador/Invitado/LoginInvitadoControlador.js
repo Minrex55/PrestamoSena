@@ -1,5 +1,5 @@
 import LoginInvitadoModelo from '../../modelo/Invitado/LoginInvitadoModelo.js';
-import JwtConfig from '../../config/JwtConfig.js'; // ← AGREGAR ESTA LÍNEA
+//import JwtConfig from '../../config/JwtConfig.js'; // ← AGREGAR ESTA LÍNEA
 
 class LoginInvitadoControlador {
   constructor() {
@@ -15,17 +15,17 @@ class LoginInvitadoControlador {
       const Invitado = await LoginInvitadoModelo.login(correopersonal, contrasena);
       
       
-      const token = JwtConfig.generarToken({
+      /*const token = JwtConfig.generarToken({
         id: Invitado._id || Invitado.id || Invitado.documento,
         email: Invitado.correopersonal,
         rol: 'Invitado',
         nombre: Invitado.nombres
-      });
+      });*/
       
       
       return res.status(200).json({
         mensaje: 'Inicio de sesión exitoso',
-        token, 
+        //token, 
         Invitado
       });
     } catch (error) {

@@ -1,8 +1,6 @@
 import express from 'express';
 import AuthMiddleware from "../../middlewares/AuthMiddleware.js";
 import RoleMiddleware from "../../middlewares/RoleMiddleware.js";
-const router = express.Router();
-
 import CrearPorteroControlador from '../../controlador/Administrador/CrearPorteroControlador.js';
 import CrearAdministradorControlador from '../../controlador/Administrador/CrearAdministradorControlador.js';
 import EliminarPorteroControlador from '../../controlador/Administrador/EliminarPorteroControlador.js';

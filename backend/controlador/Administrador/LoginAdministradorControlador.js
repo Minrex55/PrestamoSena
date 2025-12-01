@@ -10,7 +10,7 @@ class LoginAdministradorControlador {
   }
 
   async login(req, res) {
-    const { correopersonal, contrasena } = req.body;
+    const { t1: correopersonal, t2: contrasena } = req.body;
     try {
       const Administrador = await LoginAdministradorModelo.login(correopersonal, contrasena);
       
