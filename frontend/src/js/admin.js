@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
         tablaBody.innerHTML = '<tr><td colspan="7" style="text-align:center">Cargando datos...</td></tr>';
 
         try {
-            // Verifica si tu puerto es 3000 o 3333
             const respuesta = await fetch("http://localhost:3333/admin/portero/buscar", {
                 method: 'GET',
                 headers: {

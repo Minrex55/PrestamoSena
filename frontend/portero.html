@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IngreSENA - Panel de Administrador</title>
+    <link rel="stylesheet" href="../frontend/src/css/portero.css">
+    <link rel="shortcut icon" href="./src/media/logo_sena.png" type="image/png">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Overlay para móviles (Fondo oscuro al abrir menú) -->
+    <div class="overlay" id="overlay"></div>
+
+    <div class="admin-container">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-wrapper">
+                    <img src="./src/media/logo_sena.png" alt="Logo SENA" class="sidebar-logo">
+                </div>
+                <h2>IngreSENA</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" class="active" id="btn-porteros"><i class="fas fa-laptop-house"></i> Equipos</a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> Usuarios</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
+                    <li class="logout-item"><a href="index.html"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <header class="top-bar">
+                <button id="menu-toggle" class="menu-btn"><i class="fas fa-bars"></i></button>
+                <div class="user-info">
+                    <span>Hola, <strong>Portero</strong></span>
+                    <div class="user-avatar"><i class="fas fa-user"></i></div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                <div class="card-table">
+                    
+                    <!-- ENCABEZADO CON BUSCADOR Y BOTÓN -->
+                    <div class="card-header">
+                        <h3>Gestión de Equipos</h3>
+                        <div class="header-actions">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchInput" placeholder="Buscar Equipo">
+                            </div>
+                            <button class="btn-add" onclick="window.location.href='porterocrear.html'">
+                                <i class="fas fa-plus"></i> Registrar Equipo
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="sena-table">
+                            <thead>
+                                <tr>
+                                    <th>Modelo</th>
+                                    <th>Número de Serie</th>
+                                    <th>ID Invitado</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Se llena dinámicamente con JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="./src/js/portero.js"></script>
+</body>
+</html>

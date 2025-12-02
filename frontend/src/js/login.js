@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             {
                 rol: 'Portero',
                 url: 'http://localhost:3333/loginportero/login',
-                redirect: './deviceregister.html'
+                redirect: './portero.html'
             },
             {
                 rol: 'Invitado',
