@@ -24,7 +24,7 @@ class PorteroRutas {
     // Proteger todas las rutas
     
         this.router.use((req, res, next) => AuthMiddleware.autenticar(req, res, next));
-        this.router.use(RoleMiddleware.verificarRol('Administrador'));
+        this.router.use(RoleMiddleware.verificarRol('Portero'));
 
         this.router.post('/equipo/crear', CrearEquipoControlador.crearEquipo);
         this.router.get('/equipo/modelo', ObtenerEquipoControlador.obtenerEquipoPorModelo);
