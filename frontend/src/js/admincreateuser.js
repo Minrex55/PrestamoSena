@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Limpiar el formulario y volver a la lista
                     createForm.reset();
                     // Asegúrate de que este archivo HTML exista, si es adminpanel.html cámbialo aquí
-                    window.location.href = 'admin.html'; 
+                    window.location.href = './adminpanel.html'; 
 
                 } else {
                     // ERROR (400, 401, 409, 500)
