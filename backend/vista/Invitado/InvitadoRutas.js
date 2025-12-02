@@ -18,11 +18,14 @@ class InvitadoRutas {
     }
 
     configurarRutas() {
+        
+        this.router.post('/crear', CrearInvitadoControlador.crearInvitado);
+
         // Proteger todas las rutas
         this.router.use((req, res, next) => AuthMiddleware.autenticar(req, res, next));
         this.router.use(RoleMiddleware.verificarRol('Invitado'));
         
-        this.router.post('/crear', CrearInvitadoControlador.crearInvitado);
+        
         this.router.get('/equipos/:idinvitado', ConsultarEquiposInvitadoControlador.obtenerEquiposPorInvitado);
         this.router.get('/:idinvitado', ObtenerInvitadoControlador.obtenerInvitadoPorId);
         this.router.put('/:idinvitado', ActualizarInvitadoControlador.actualizarInvitado);
