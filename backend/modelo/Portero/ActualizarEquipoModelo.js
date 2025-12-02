@@ -9,27 +9,38 @@ class ActualizarEquipoModelo {
     ActualizarEquipoModelo.instance = this;
   }
 
-  async validacionEquipo(numerodeserie) {
-        const query = `SELECT * FROM equipos WHERE numerodeserie = $1;`;
+  // Ahora recibe idequipo para excluirlo de la búsqueda
+  async validacionEquipo(numerodeserie, idequipo) {
+        // Buscamos si existe el serial PERO que el ID sea diferente al que estamos editando
+        const query = `SELECT * FROM equipos WHERE numerodeserie = $1 AND idequipo != $2;`;
 
         try {
-            const resultado = await this.db.query(query, [numerodeserie]);
+            const resultado = await this.db.query(query, [numerodeserie, idequipo]);
             return resultado.rows.length > 0;
-        }catch(error) {
-            console.log('Error al verificar el equipo en la base de datos', error)
+        } catch(error) {
+            console.log('Error al verificar el equipo en la base de datos', error);
+            throw error; // Es buena práctica lanzar el error para que el controlador se entere
         }
     }
 
   async actualizarEquipo(idequipo, equipo) {
-    const {modelo, numerodeserie, idinvitado} = equipo
-    const query = `UPDATE equipos SET modelo = $1, numerodeserie =  $2, idinvitado = $3 WHERE idequipo = $4 RETURNING *`;
-    const valores = [modelo, numerodeserie, idinvitado, idequipo];
+    // Desestructuramos incluyendo 'estado'
+    const { modelo, numerodeserie, idinvitado, estado } = equipo;
+    
+    // Actualizamos la consulta SQL
+    const query = `UPDATE equipos 
+                   SET modelo = $1, numerodeserie = $2, idinvitado = $3, estado = $4 
+                   WHERE idequipo = $5 
+                   RETURNING *`;
+                   
+    const valores = [modelo, numerodeserie, idinvitado, estado, idequipo];
 
     try {
       const resultado = await this.db.query(query, valores);
       return resultado.rows[0];
-    }catch(error) {
+    } catch(error) {
       console.error("Error al actualizar el equipo", error);
+      throw error;
     }
   }
 }

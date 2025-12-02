@@ -21,9 +21,9 @@ class CrearEquipoModelo {
     }
 
     async crearEquipo(equipos) {
-      const {modelo, numerodeserie, idinvitado} = equipos
-      const query = `INSERT INTO equipos (modelo, numerodeserie, idinvitado) VALUES ($1, $2, $3) RETURNING *;`
-      const valores = [modelo, numerodeserie, idinvitado]
+      const {modelo, numerodeserie, idinvitado, estado} = equipos
+      const query = `INSERT INTO equipos (modelo, numerodeserie, idinvitado, estado) VALUES ($1, $2, $3, $4) RETURNING *;`
+      const valores = [modelo, numerodeserie, idinvitado, estado]
       try {
         const resultado = await this.db.query(query, valores)
         return resultado.rows[0]

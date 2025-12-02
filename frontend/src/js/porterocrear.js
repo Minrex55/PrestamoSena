@@ -10,11 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputModelo = document.getElementById('modelo');
     const inputSerie = document.getElementById('serie');
     const inputInvitado = document.getElementById('invitado');
+    const estadoSelect = document.getElementById('estado');
 
     // Verificar autenticación
     if (!token) {
         alert('No hay sesión activa. Redirigiendo al inicio...');
-        window.location.href = 'index.html';
+        window.location.href = 'login.html';
         return;
     }
 
@@ -40,7 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const datos = {
             t1: modelo,      // Modelo
             t2: serie,       // Número de serie
-            t3: invitado     // ID Invitado
+            t3: invitado,     // ID Invitado
+            t4: estadoSelect.value  // Estado
         };
 
         try {

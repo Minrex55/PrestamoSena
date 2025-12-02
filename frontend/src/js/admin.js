@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rol = localStorage.getItem('rol');
 
     if (!token || rol !== 'Administrador') {
-        window.location.href = 'index.html';
+        window.location.href = 'login.html';
         return;
     }
 
@@ -137,7 +137,7 @@ async function eliminarUsuario(id, rol) {
     const token = localStorage.getItem('token');
     if (!token) {
         alert("Tu sesión ha expirado.");
-        window.location.href = 'index.html';
+        window.location.href = 'login.html';
         return;
     }
 

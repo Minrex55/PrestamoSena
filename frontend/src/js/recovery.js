@@ -122,7 +122,7 @@ recoveryForm.addEventListener('submit', (e) => {
     // Simulación de éxito
     console.log("Contraseña actualizada para:", emailInput.value);
     alert('¡Contraseña actualizada correctamente!');
-    window.location.href = 'index.html';
+    window.location.href = 'login.html';
 });
 
 

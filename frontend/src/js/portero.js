@@ -106,12 +106,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Filtramos por Modelo O por Serial
+            // Filtramos por Modelo O por Serial O por ID Invitado
             const equiposFiltrados = listaEquiposGlobal.filter(equipo => {
+                const idinvitado = String(equipo.idinvitado || "").toLowerCase();
                 const modelo = (equipo.modelo || "").toLowerCase();
                 const serial = (equipo.numerodeserie || "").toLowerCase();
                 
-                return modelo.includes(texto) || serial.includes(texto);
+                return modelo.includes(texto) || serial.includes(texto) || idinvitado.includes(texto);
             });
 
             renderizarTabla(equiposFiltrados);
@@ -125,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const token = localStorage.getItem('token');
         
         if (!token) {
-            window.location.href = 'index.html';
+            window.location.href = 'login.html';
             return;
         }
 
@@ -141,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.status === 401 || response.status === 403) {
                 alert('Tu sesión ha expirado.');
                 localStorage.removeItem('token');
-                window.location.href = 'index.html';
+                window.location.href = 'login.html';
                 return;
             }
 
@@ -186,7 +187,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${equipo.modelo || 'Sin Modelo'}</td>
                 <td>${equipo.numerodeserie || 'Sin Serial'}</td>
                 <td>${equipo.idinvitado || 'No asignado'}</td>
-                <td><span class="status-badge status-active">Activo</span></td>
+                <td><span class="badge ${equipo.estado === 'Activo' ? 'status-active' : 'status-inactive'}">
+            ${equipo.estado ==='Activo' ? 'Activo' : 'Inactivo'}
+        </span></td>
                 <td>
                     <div class="action-buttons">
                         <!-- Aquí se inyecta el ID en la función onclick -->
@@ -208,6 +211,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // --- FUNCIONES GLOBALES ---
+
+function editarEquipo(id, rol) {
+    // Redirige a la página de edición poniendo los datos en la URL
+    window.location.href = `editdevice.html?id=${id}&rol=${rol}`;
+}
 
 window.eliminarEquipo = async (id) => {
     if(!confirm('¿Estás seguro de que deseas eliminar este equipo?')) return;
@@ -231,17 +239,4 @@ window.eliminarEquipo = async (id) => {
         console.error(error);
         alert('Error de conexión');
     }
-};
-
-window.editarEquipo = (id) => {
-    // 1. Aquí capturas el ID para editar.
-    console.log("ID capturado para editar:", id);
-    
-    // 2. Puedes redirigir pasando el ID en la URL
-    // window.location.href = `porteroeditar.html?id=${id}`;
-    
-    // O guardar en localStorage temporalmente si usas un modal en la misma página
-    // localStorage.setItem('equipoEditarId', id);
-    
-    alert(`Listo para editar el equipo con ID: ${id}`);
 };

@@ -29,10 +29,17 @@ class ObtenerInvitadoControlador {
     }
 
     async obtenerInvitadoPorDocumento(req, res) {
-        const {documento} = req.query
+        const {documento} = req.query;
+
+        if (!documento) {
+            return res.status(400).json({ mensaje: 'Documento requerido' });
+        }
 
         try {
-            const invitadoObtenidoPorDocumento = await ObtenerInvitadoModelo.obtenerInvitadoPorDocumento(documento);
+            // CORRECCIÓN AQUÍ: Limpiar espacios antes de llamar al modelo
+            const docLimpio = documento.trim();
+
+            const invitadoObtenidoPorDocumento = await ObtenerInvitadoModelo.obtenerInvitadoPorDocumento(docLimpio);
 
             if (!invitadoObtenidoPorDocumento) {
                 return res.status(404).json({ mensaje: 'Invitado no encontrado' });

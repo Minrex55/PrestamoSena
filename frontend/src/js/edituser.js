@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const rolLogueado = localStorage.getItem('rol');
 
     if (!token || rolLogueado !== 'Administrador') {
-        window.location.href = 'index.html';
+        window.location.href = 'login.html';
         return;
     }
 

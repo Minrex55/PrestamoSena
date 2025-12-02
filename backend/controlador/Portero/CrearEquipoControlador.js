@@ -9,9 +9,9 @@ class CrearEquipoControlador{
     }
 
     async crearEquipo(req, res) {
-      const {t1: modelo, t2: numerodeserie, t3: idinvitado} = req.body
+      const {t1: modelo, t2: numerodeserie, t3: idinvitado, t4: estado} = req.body
 
-      if (!modelo?.trim() || !numerodeserie?.trim() || !idinvitado?.trim()) {
+      if (!modelo?.trim() || !numerodeserie?.trim() || !idinvitado?.trim() || !estado?.trim()) {
         return res.status(400).json({ mensaje: 'Todos los campos son obligatorios' });
       }       
 
@@ -31,7 +31,7 @@ class CrearEquipoControlador{
       }
 
     try {
-      const nuevoEquipo = await CrearEquipoModelo.crearEquipo({ modelo, numerodeserie, idinvitado });
+      const nuevoEquipo = await CrearEquipoModelo.crearEquipo({ modelo, numerodeserie, idinvitado, estado });
 
       return res.status(201).json({
         mensaje: 'Equipo creado correctamente.',

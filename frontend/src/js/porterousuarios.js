@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // ---------------------------------------------------------
+    // VARIABLE GLOBAL PARA ALMACENAR LOS INVITADOS
+    // ---------------------------------------------------------
+    let listaInvitadosGlobal = [];
+
     // ---------------------------------------------------------
     // 1. VERIFICACIÓN DE SEGURIDAD
     // ---------------------------------------------------------
@@ -7,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!token || rol !== 'Portero') {
         alert('No tienes permiso para acceder a esta página o tu sesión expiró.');
-        window.location.href = 'index.html';
+        window.location.href = 'login.html';
         return;
     }
 
@@ -29,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ---------------------------------------------------------
-    // 3. FUNCIONALIDAD DEL MENÚ (Responsive)
+    // 3. FUNCIONALIDAD DEL MENÚ
     // ---------------------------------------------------------
     if (menuToggle) {
         menuToggle.addEventListener('click', () => {
@@ -49,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. LÓGICA DE DATOS (CRUD)
     // ---------------------------------------------------------
 
-    // --- CARGAR TODOS LOS INVITADOS AL INICIO ---
+    // --- CARGAR TODOS LOS INVITADOS DEL SERVIDOR ---
     async function cargarInvitados() {
         try {
             const response = await fetch(`${BASE_URL}/invitado`, { headers: HEADERS });
@@ -57,30 +63,36 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error('Error al obtener invitados');
             
             const data = await response.json();
-            // El backend devuelve: { mensaje: '...', invitadosObtenidos: [...] }
-            renderizarTabla(data.invitadosObtenidos || []);
+            
+            // GUARDAMOS EN LA VARIABLE GLOBAL
+            if (data.invitadosObtenidos && data.invitadosObtenidos.length > 0) {
+                listaInvitadosGlobal = data.invitadosObtenidos;
+            } else {
+                listaInvitadosGlobal = [];
+            }
+
+            // Renderizamos la tabla con todo lo que llegó
+            renderizarTabla(listaInvitadosGlobal);
+
         } catch (error) {
             console.error(error);
-            tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Error cargando datos del servidor.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Error cargando datos del servidor.</td></tr>';
         }
     }
 
-    // --- RENDERIZAR LA TABLA EN EL HTML ---
+    // --- RENDERIZAR LA TABLA (REUTILIZABLE) ---
     function renderizarTabla(listaInvitados) {
         tableBody.innerHTML = ''; // Limpiar tabla actual
 
         if (!listaInvitados || listaInvitados.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No se encontraron invitados.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No se encontraron resultados.</td></tr>';
             return;
         }
 
-        // Convertir a array si viene un solo objeto (búsqueda por documento suele devolver uno solo)
-        const invitados = Array.isArray(listaInvitados) ? listaInvitados : [listaInvitados];
-
-        invitados.forEach(invitado => {
+        listaInvitados.forEach(invitado => {
             const tr = document.createElement('tr');
             
-            // Validamos que existan las propiedades, si no ponemos 'N/A'
+            // Validamos propiedades (Backend puede enviar 'nombre' o 'nombres')
             const doc = invitado.documento || 'N/A';
             const nom = invitado.nombre || invitado.nombres || 'N/A';
             const tel = invitado.telefono || 'N/A';
@@ -90,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Renderizado de fila
             tr.innerHTML = `
+                <td>${id}</td>
                 <td>${doc}</td>
                 <td>${nom}</td>
                 <td>${tel}</td>
@@ -101,9 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </td>
                 <td>
                     <div class="action-buttons">
-                        <button class="btn-edit" onclick="alert('Funcionalidad de editar pendiente')">
-                            <i class="fas fa-edit"></i>
-                        </button>
                         <button class="btn-delete" data-id="${id}">
                             <i class="fas fa-trash-alt"></i>
                         </button>
@@ -113,64 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
             tableBody.appendChild(tr);
         });
 
-        // Asignar eventos a los botones de eliminar generados
+        // Asignar eventos a los botones de eliminar
         document.querySelectorAll('.btn-delete').forEach(btn => {
             btn.addEventListener('click', function() {
                 const idEliminar = this.getAttribute('data-id');
                 eliminarInvitado(idEliminar);
             });
         });
-    }
-
-    // --- FUNCIÓN DE BÚSQUEDA CORREGIDA ---
-    async function realizarBusqueda(termino) {
-        // Si el buscador está vacío, cargamos todos
-        if (termino.trim() === '') {
-            cargarInvitados();
-            return;
-        }
-
-        try {
-            let url = '';
-            
-            // CORRECCIÓN: Usamos !isNaN para detectar si es número (Documento) o texto (Nombre)
-            // Esto verifica si el término NO es "No es un Número" (es decir, sí es un número)
-            if (!isNaN(termino) && termino.trim() !== '') {
-                // Es un número -> Busca por Documento
-                console.log("Buscando por Documento:", termino);
-                url = `${BASE_URL}/invitado/documento?documento=${termino}`;
-            } else {
-                // Es texto -> Busca por Nombre
-                console.log("Buscando por Nombre:", termino);
-                url = `${BASE_URL}/invitado/nombre?nombres=${termino}`;
-            }
-
-            const response = await fetch(url, { headers: HEADERS });
-            
-            if (response.status === 404) {
-                renderizarTabla([]); // Mostrar tabla vacía si no encuentra nada
-                return;
-            }
-
-            const data = await response.json();
-            console.log("Datos recibidos búsqueda:", data);
-
-            // Mapeo dinámico según lo que responda el backend
-            let resultados = [];
-            
-            if (data.invitadoObtenidoPorDocumento) {
-                resultados = data.invitadoObtenidoPorDocumento;
-            } else if (data.invitadoObtenidoPorNombre) {
-                resultados = data.invitadoObtenidoPorNombre;
-            } else if (data.invitadosObtenidos) {
-                resultados = data.invitadosObtenidos;
-            }
-
-            renderizarTabla(resultados);
-
-        } catch (error) {
-            console.error('Error en búsqueda:', error);
-        }
     }
 
     // --- FUNCIÓN ELIMINAR ---
@@ -186,12 +145,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 alert('Invitado eliminado correctamente.');
-                // Verificamos si hay algo escrito en el buscador para recargar esa búsqueda o todo
-                if (searchInput.value.trim() !== '') {
-                    realizarBusqueda(searchInput.value);
-                } else {
-                    cargarInvitados();
-                }
+                // Recargamos del servidor para actualizar la lista global y la tabla
+                cargarInvitados();
             } else {
                 alert('Hubo un error al intentar eliminar.');
             }
@@ -202,27 +157,45 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ---------------------------------------------------------
-    // 5. EVENT LISTENERS
+    // 5. EVENT LISTENERS Y BÚSQUEDA LOCAL
     // ---------------------------------------------------------
     
-    // Listener del Buscador con "Debounce" (espera a que termines de escribir)
-    let timeoutBusqueda;
-    searchInput.addEventListener('input', (e) => {
-        clearTimeout(timeoutBusqueda);
-        const valor = e.target.value;
-        
-        timeoutBusqueda = setTimeout(() => {
-            realizarBusqueda(valor);
-        }, 300); // 300ms de espera
-    });
+    // LÓGICA DE BÚSQUEDA INSTANTÁNEA (FILTRO LOCAL)
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            // 1. Obtenemos el texto y lo ponemos en minúsculas
+            const texto = e.target.value.toLowerCase().trim();
+            
+            // 2. Si está vacío, mostramos todo
+            if (texto === "") {
+                renderizarTabla(listaInvitadosGlobal);
+                return;
+            }
+
+            // 3. Filtramos la lista global
+            const invitadosFiltrados = listaInvitadosGlobal.filter(invitado => {
+                // Obtenemos los valores en minúsculas para comparar
+                const doc = String(invitado.documento || "").toLowerCase();
+                const nom = (invitado.nombre || invitado.nombres || "").toLowerCase();
+                
+                // Retorna TRUE si el documento O el nombre contienen el texto escrito
+                return doc.includes(texto) || nom.includes(texto);
+            });
+
+            // 4. Renderizamos los resultados filtrados
+            renderizarTabla(invitadosFiltrados);
+        });
+    }
 
     // Cerrar Sesión
-    btnLogout.addEventListener('click', (e) => {
-        e.preventDefault();
-        localStorage.clear(); // Limpia token y datos
-        window.location.href = 'index.html';
-    });
+    if(btnLogout) {
+        btnLogout.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.clear(); 
+            window.location.href = 'login.html';
+        });
+    }
 
-    // Carga inicial
+    // --- INICIALIZACIÓN ---
     cargarInvitados();
 });

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!token || !idUsuario || rol !== 'Invitado') {
         alert("No has iniciado sesión o no tienes permisos.");
-        window.location.href = 'index.html'; 
+        window.location.href = 'login.html'; 
         return;
     }
 
@@ -145,7 +145,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <td>${eq.modelo || ''}</td>
                         <td><strong>${eq.numerodeserie}</strong></td>
                         <td>${formatearFecha(eq.fecha_ingreso)}</td>
-                        <td><span class="badge status-active">Activo</span></td>
+                        <td><span class="badge ${eq.estado === 'Activo' ? 'status-active' : 'status-inactive'}">
+            ${eq.estado ==='Activo' ? 'Activo' : 'Inactivo'}
+        </span></td>
                     </tr>
                 `;
                 tablaEquiposBody.innerHTML += row;
@@ -265,6 +267,48 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    const sidebarLinks = document.querySelectorAll('.sidebar-nav a[href^="#"]');
+
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault(); // Evita el comportamiento por defecto
+
+            const targetId = this.getAttribute('href'); // Obtiene "#equipos" o "#perfil"
+            const targetSection = document.querySelector(targetId);
+
+            if (targetSection) {
+                // Opción 1: Scroll suave automático (Soportado en navegadores modernos)
+                targetSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+
+                // Opción 2 (Alternativa): Si tienes un header fijo que tapa el título
+                // Descomenta las siguientes líneas si el título queda oculto bajo la barra superior
+                /*
+                const headerOffset = 80; // Altura de tu top-bar + un poco de espacio
+                const elementPosition = targetSection.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                
+                // Buscamos el contenedor que tiene el scroll (probablemente .main-content)
+                const mainContent = document.querySelector('.main-content');
+                mainContent.scrollTo({
+                    top: mainContent.scrollTop + elementPosition - headerOffset,
+                    behavior: "smooth"
+                });
+                */
+
+                // CERRAR MENÚ EN MÓVIL (Opcional)
+                // Si estás en celular, cerramos el sidebar al hacer click
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('overlay');
+                if (sidebar.classList.contains('active')) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            }
+        });
+    });
 
     // Carga inicial
     cargarDatosPerfil();

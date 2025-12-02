@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IngreSENA - Crear Equipo</title>
+    <title>IngreSENA - Editar Equipo</title>
     
-    <!-- CSS Específico -->
-    <link rel="stylesheet" href="./src/css/admincreateuser.css">
-    
+    <!-- CSS (Reutilizamos el mismo estilo o uno nuevo con el mismo código) -->
+    <link rel="stylesheet" href="./src/css/editdevicestyle.css">
     <link rel="shortcut icon" href="./src/media/logo_sena.png" type="image/png">
-    <!-- FontAwesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- Overlay para móvil -->
     <div class="overlay" id="overlay"></div>
 
     <div class="admin-container">
@@ -30,10 +27,8 @@
             
             <nav class="sidebar-nav">
                 <ul>
-                    <!-- El enlace activo sigue siendo Equipos -->
-                    <li><a href="portero.html" class="active"><i class="fas fa-laptop-house"></i> Equipos</a></li>
-                    <li><a href="#"><i class="fas fa-users"></i> Usuarios</a></li>
-                    <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
+                    <!-- Enlaces adaptados para Portero -->
+                    <li><a href="portero.html"><i class="fas fa-laptop"></i> Equipos</a></li>
                     <li class="logout-item"><a href="login.html"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
                 </ul>
             </nav>
@@ -44,57 +39,59 @@
             <header class="top-bar">
                 <button id="menu-toggle" class="menu-btn"><i class="fas fa-bars"></i></button>
                 <div class="user-info">
+                    <!-- Cambio de rol visual -->
                     <span>Hola, <strong>Portero</strong></span>
-                    <div class="user-avatar"><i class="fas fa-user"></i></div>
+                    <div class="user-avatar"><i class="fas fa-user-shield"></i></div>
                 </div>
             </header>
 
             <div class="content-wrapper">
-                
                 <div class="back-link">
-                    <a href="portero.html"><i class="fas fa-arrow-left"></i> Volver a la lista</a>
+                    <a href="portero.html"><i class="fas fa-arrow-left"></i> Volver al inventario</a>
                 </div>
 
                 <div class="card-form">
                     <div class="card-header">
-                        <h3><i class="fas fa-user-plus"></i> Registrar Equipo</h3>
-                        <p>Complete el formulario para registrar un nuevo equipo en el sistema.</p>
+                        <h3>Editar Información del Equipo</h3>
+                        <p>Modifique los datos del equipo ingresado.</p>
                     </div>
                     
-                    <form id="createUserForm" class="create-form">
+                    <form id="editEquipoForm" class="edit-form">
                         <div class="form-grid">
                             
                             <!-- Modelo -->
                             <div class="form-group">
-                                <label for="modelo">Modelo <span class="required">*</span></label>
-                                <input type="text" id="modelo" placeholder="Asus VivoBook" required>
+                                <label for="modelo">Modelo del Equipo <span class="required">*</span></label>
+                                <input type="text" id="modelo" placeholder="Ej: Lenovo Thinkpad" required>
                             </div>
 
-                            <!-- Serie -->
+                            <!-- Número de Serie -->
                             <div class="form-group">
-                                <label for="serie">Numero de serie <span class="required">*</span></label>
-                                <input type="text" id="serie" placeholder="PHTF-HTGS" required>
+                                <label for="serial">Número de Serie <span class="required">*</span></label>
+                                <input type="text" id="serial" placeholder="Ej: SN-123456789" required>
                             </div>
 
-                            <!-- Invitado ID -->
+                            <!-- ID Invitado (Dueño del equipo) -->
                             <div class="form-group">
-                                <label for="invitado">ID Invitado <span class="required">*</span></label>
-                                <input type="text" id="invitado" placeholder="10" required>
+                                <label for="idinvitado">ID del Invitado (Propietario) <span class="required">*</span></label>
+                                <input type="number" id="idinvitado" required>
                             </div>
 
-                            <!-- Estado -->
+                            <!-- Estado Actual (Desplegable) -->
                             <div class="form-group">
-                                <label for="estado">Estado Inicial <span class="required">*</span></label>
-                                <select id="estado" required class="select-status">
-                                    <option value="activo" selected>Activo</option>
-                                    <option value="inactivo">Inactivo</option>
+                                <label for="estado">Estado Actual <span class="required">*</span></label>
+                                <select id="estado" required>
+                                    <option value="" disabled selected>Seleccione estado...</option>
+                                    <option value="Activo">Activo</option>
+                                    <option value="Inactivo">Inactivo</option>
                                 </select>
                             </div>
+
                         </div>
 
                         <div class="form-actions">
-                            <!-- Solo queda el botón de Registrar -->
-                            <button type="submit" class="btn-save">Registrar Equipo</button>
+                            <a href="portero.html" class="btn-cancel">Cancelar</a>
+                            <button type="submit" class="btn-save">Guardar Cambios</button>
                         </div>
                     </form>
                 </div>
@@ -102,6 +99,6 @@
         </main>
     </div>
 
-    <script src="./src/js/porterocrear.js"></script>
+    <script src="./src/js/editdevice.js"></script>
 </body>
 </html>

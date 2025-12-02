@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!token || rolUsuario !== 'Administrador') {
         alert('Sesión no válida. Debes ser Administrador.');
-        window.location.href = './index.html';
+        window.location.href = './login.html';
         return;
     }
 
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Si el token venció
                     if (response.status === 401 || response.status === 403) {
                         alert('Tu sesión ha expirado. Por favor inicia sesión de nuevo.');
-                        window.location.href = 'index.html';
+                        window.location.href = 'login.html';
                         return;
                     }
 
