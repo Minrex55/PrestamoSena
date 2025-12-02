@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IngreSENA - Panel de Administrador</title>
-    <link rel="stylesheet" href="../frontend/src/css/portero.css">
+    <title>IngreSENA - Gestión de Usuarios</title>
+    <link rel="stylesheet" href="../frontend/src/css/porterousuarios.css">
     <link rel="shortcut icon" href="./src/media/logo_sena.png" type="image/png">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -27,8 +27,10 @@
             
             <nav class="sidebar-nav">
                 <ul>
-                    <li><a href="#" class="active" id="btn-porteros"><i class="fas fa-laptop-house"></i> Equipos</a></li>
-                    <li><a href="./porterousuarios.html"><i class="fas fa-users"></i> Usuarios</a></li>
+                    <!-- Le quité la clase 'active' a Equipos -->
+                    <li><a href="portero.html" id="btn-porteros"><i class="fas fa-laptop-house"></i> Equipos</a></li>
+                    <!-- Le puse la clase 'active' a Usuarios -->
+                    <li><a href="porterousuarios.html" class="active"><i class="fas fa-users"></i> Usuarios</a></li>
                     <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
                     <li class="logout-item"><a href="index.html"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
                 </ul>
@@ -50,15 +52,12 @@
                     
                     <!-- ENCABEZADO CON BUSCADOR Y BOTÓN -->
                     <div class="card-header">
-                        <h3>Gestión de Equipos</h3>
+                        <h3>Gestión de Invitados</h3>
                         <div class="header-actions">
                             <div class="search-box">
                                 <i class="fas fa-search"></i>
-                                <input type="text" id="searchInput" placeholder="Buscar Equipo">
+                                <input type="text" id="searchInput" placeholder="Buscar Invitado">
                             </div>
-                            <button class="btn-add" onclick="window.location.href='porterocrear.html'">
-                                <i class="fas fa-plus"></i> Registrar Equipo
-                            </button>
                         </div>
                     </div>
                     
@@ -66,9 +65,10 @@
                         <table class="sena-table">
                             <thead>
                                 <tr>
-                                    <th>Modelo</th>
-                                    <th>Número de Serie</th>
-                                    <th>ID Invitado</th>
+                                    <th>Documento</th>
+                                    <th>Nombres</th>
+                                    <th>Telefono</th>
+                                    <th>Correo</th>
                                     <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -83,6 +83,6 @@
         </main>
     </div>
 
-    <script src="./src/js/portero.js"></script>
+    <script src="./src/js/porterousuarios.js"></script>
 </body>
 </html>
