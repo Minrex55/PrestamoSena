@@ -1,97 +1,130 @@
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // CONSTANTE DE COLOR INSTITUCIONAL
+    const SENA_GREEN = '#018102';
+    
     const loginForm = document.getElementById('loginForm');
 
-    loginForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-        if (email.trim() === '' || password.trim() === '') {
-            alert('Por favor, completa todos los campos.');
-            return;
-        }
-
-        const datosLogin = {
-            t1: email,
-            t2: password
-        };
-
-        const intentos = [
-            {
-                rol: 'Administrador',
-                url: 'http://localhost:3333/loginadmin/login',
-                redirect: './adminpanel.html' 
-            },
-            {
-                rol: 'Portero',
-                url: 'http://localhost:3333/loginportero/login',
-                redirect: './portero.html'
-            },
-            {
-                rol: 'Invitado',
-                url: 'http://localhost:3333/logininvitado/login',
-                redirect: './usuario.html'
-            }
-        ];
-
-        let loginExitoso = false;
-
-        for (const intento of intentos) {
-            try {
-                const response = await fetch(intento.url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datosLogin)
+            // 1. VALIDACIÓN DE CAMPOS VACÍOS
+            if (email.trim() === '' || password.trim() === '') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Campos incompletos',
+                    text: 'Por favor, ingresa tu correo y contraseña.',
+                    confirmButtonColor: SENA_GREEN
                 });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    
-                    console.log(`Logueado como ${intento.rol}`);
-                    console.log("Datos recibidos:", data); // Para ver qué llega exactamente
-                    
-                    // 1. Guardamos token y rol
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('rol', intento.rol);
-                    
-                    // 2. CORRECCIÓN AQUÍ: Guardamos el ID
-                    let idGuardado = null;
-
-                    // Tu controlador devuelve { Invitado: { ... } } (Con I mayúscula)
-                    if (data.Invitado) {
-                        // Busca el id en las propiedades comunes
-                        idGuardado = data.Invitado.id || data.Invitado.idinvitado || data.Invitado.documento || data.Invitado._id;
-                    } 
-                    // Por si acaso el backend cambia o para los otros roles (Admin/Portero)
-                    else if (data.invitado) {
-                        idGuardado = data.invitado.id;
-                    } 
-                    else if (data.id) {
-                        idGuardado = data.id;
-                    }
-
-                    // Si encontramos un ID, lo guardamos
-                    if (idGuardado) {
-                        localStorage.setItem('idUsuario', idGuardado);
-                        console.log("ID Usuario guardado:", idGuardado);
-                    } else {
-                        console.warn("ATENCIÓN: No se encontró el ID en la respuesta del servidor.");
-                    }
-
-                    alert(`Bienvenido ${intento.rol}`);
-                    window.location.href = intento.redirect;
-                    
-                    loginExitoso = true;
-                    break; 
-                }
-            } catch (error) {
-                console.warn(`No se pudo conectar con ruta de ${intento.rol}`, error);
+                return;
             }
-        }
 
-        if (!loginExitoso) {
-            alert('Correo o contraseña incorrectos, o usuario no registrado.');
-        }
-    });
+            const datosLogin = {
+                t1: email,
+                t2: password
+            };
+
+            const intentos = [
+                {
+                    rol: 'Administrador',
+                    url: 'http://localhost:3333/loginadmin/login',
+                    redirect: './adminpanel.html' 
+                },
+                {
+                    rol: 'Portero',
+                    url: 'http://localhost:3333/loginportero/login',
+                    redirect: './portero.html'
+                },
+                {
+                    rol: 'Invitado',
+                    url: 'http://localhost:3333/logininvitado/login',
+                    redirect: './usuario.html'
+                }
+            ];
+
+            let loginExitoso = false;
+
+            // 2. MOSTRAR LOADING (Bloquea la pantalla mientras prueba los roles)
+            Swal.fire({
+                title: 'Iniciando sesión...',
+                text: 'Verificando credenciales',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            // 3. CICLO DE INTENTOS DE LOGIN
+            for (const intento of intentos) {
+                try {
+                    const response = await fetch(intento.url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(datosLogin)
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        console.log(`Logueado como ${intento.rol}`);
+                        
+                        // Guardamos token y rol
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('rol', intento.rol);
+                        
+                        // Lógica de ID (Conservada de tu código)
+                        let idGuardado = null;
+
+                        if (data.Invitado) {
+                            idGuardado = data.Invitado.id || data.Invitado.idinvitado || data.Invitado.documento || data.Invitado._id;
+                        } 
+                        else if (data.invitado) {
+                            idGuardado = data.invitado.id;
+                        } 
+                        else if (data.id) {
+                            idGuardado = data.id;
+                        }
+
+                        if (idGuardado) {
+                            localStorage.setItem('idUsuario', idGuardado);
+                        }
+
+                        loginExitoso = true;
+
+                        // 4. LOGIN EXITOSO
+                        // Usamos un timer para que sea fluido
+                        Swal.fire({
+                            icon: 'success',
+                            title: `¡Bienvenido ${intento.rol}!`,
+                            text: 'Redirigiendo al sistema...',
+                            timer: 1500, // Espera 1.5 segundos y se cierra solo
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = intento.redirect;
+                        });
+                        
+                        break; // Salimos del ciclo FOR porque ya entramos
+                    }
+                } catch (error) {
+                    // Si falla la conexión con un rol, intentamos con el siguiente silenciosamente
+                    console.warn(`Intento fallido con ${intento.rol}`, error);
+                }
+            }
+
+            // 5. SI TERMINA EL CICLO Y NO HUBO ÉXITO
+            if (!loginExitoso) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Acceso Denegado',
+                    text: 'Correo o contraseña incorrectos, o usuario no registrado.',
+                    confirmButtonText: 'Intentar de nuevo',
+                    confirmButtonColor: SENA_GREEN
+                });
+            }
+        });
+    }
 });

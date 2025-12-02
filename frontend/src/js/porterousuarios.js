@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     
+    // CONSTANTE DE COLOR INSTITUCIONAL
+    const SENA_GREEN = '#018102';
+
     // ---------------------------------------------------------
     // VARIABLE GLOBAL PARA ALMACENAR LOS INVITADOS
     // ---------------------------------------------------------
@@ -12,8 +15,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const rol = localStorage.getItem('rol');
 
     if (!token || rol !== 'Portero') {
-        alert('No tienes permiso para acceder a esta página o tu sesión expiró.');
-        window.location.href = 'login.html';
+        Swal.fire({
+            icon: 'error',
+            title: 'Acceso Denegado',
+            text: 'No tienes permiso para acceder o tu sesión expiró.',
+            confirmButtonColor: SENA_GREEN,
+            allowOutsideClick: false
+        }).then(() => {
+            window.location.href = 'login.html';
+        });
         return;
     }
 
@@ -57,9 +67,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- CARGAR TODOS LOS INVITADOS DEL SERVIDOR ---
     async function cargarInvitados() {
+        // Loader dentro de la tabla
+        tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center"><i class="fas fa-spinner fa-spin"></i> Cargando lista de invitados...</td></tr>';
+
         try {
             const response = await fetch(`${BASE_URL}/invitado`, { headers: HEADERS });
             
+            // Si el token expiró durante la petición
+            if (response.status === 401 || response.status === 403) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sesión Expirada',
+                    confirmButtonColor: SENA_GREEN
+                }).then(() => {
+                    window.location.href = 'login.html';
+                });
+                return;
+            }
+
             if (!response.ok) throw new Error('Error al obtener invitados');
             
             const data = await response.json();
@@ -76,7 +101,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error(error);
-            tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Error cargando datos del servidor.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red">Error de conexión con el servidor.</td></tr>';
+            
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de Red',
+                text: 'No se pudieron cargar los datos.',
+                confirmButtonColor: SENA_GREEN
+            });
         }
     }
 
@@ -92,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         listaInvitados.forEach(invitado => {
             const tr = document.createElement('tr');
             
-            // Validamos propiedades (Backend puede enviar 'nombre' o 'nombres')
+            // Validamos propiedades
             const doc = invitado.documento || 'N/A';
             const nom = invitado.nombre || invitado.nombres || 'N/A';
             const tel = invitado.telefono || 'N/A';
@@ -114,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </td>
                 <td>
                     <div class="action-buttons">
-                        <button class="btn-delete" data-id="${id}">
+                        <button class="btn-delete" data-id="${id}" title="Eliminar Invitado">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
@@ -123,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tableBody.appendChild(tr);
         });
 
-        // Asignar eventos a los botones de eliminar
+        // Asignar eventos a los botones de eliminar (IMPORTANTE)
         document.querySelectorAll('.btn-delete').forEach(btn => {
             btn.addEventListener('click', function() {
                 const idEliminar = this.getAttribute('data-id');
@@ -132,67 +164,106 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- FUNCIÓN ELIMINAR ---
+    // --- FUNCIÓN ELIMINAR CON SWEETALERT ---
     async function eliminarInvitado(id) {
-        if (!id) return alert("Error: No se identificó el ID del usuario.");
-        if (!confirm('¿Estás seguro de eliminar este invitado?')) return;
+        if (!id) return;
 
-        try {
-            const response = await fetch(`${BASE_URL}/invitado/eliminar/${id}`, {
-                method: 'DELETE',
-                headers: HEADERS
-            });
+        Swal.fire({
+            title: '¿Eliminar Invitado?',
+            text: "Esta acción borrará al invitado permanentemente.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: SENA_GREEN,
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                
+                // Loader de eliminación
+                Swal.fire({
+                    title: 'Eliminando...',
+                    text: 'Espere un momento',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
 
-            if (response.ok) {
-                alert('Invitado eliminado correctamente.');
-                // Recargamos del servidor para actualizar la lista global y la tabla
-                cargarInvitados();
-            } else {
-                alert('Hubo un error al intentar eliminar.');
+                try {
+                    const response = await fetch(`${BASE_URL}/invitado/eliminar/${id}`, {
+                        method: 'DELETE',
+                        headers: HEADERS
+                    });
+
+                    if (response.ok) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Eliminado',
+                            text: 'El invitado ha sido eliminado correctamente.',
+                            confirmButtonColor: SENA_GREEN
+                        }).then(() => {
+                            // Recargamos del servidor
+                            cargarInvitados();
+                        });
+                    } else {
+                        const data = await response.json();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.mensaje || 'Hubo un error al intentar eliminar.',
+                            confirmButtonColor: SENA_GREEN
+                        });
+                    }
+                } catch (error) {
+                    console.error(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error de conexión',
+                        text: 'No se pudo comunicar con el servidor.',
+                        confirmButtonColor: SENA_GREEN
+                    });
+                }
             }
-        } catch (error) {
-            console.error(error);
-            alert('Error de conexión con el servidor.');
-        }
+        });
     }
 
     // ---------------------------------------------------------
     // 5. EVENT LISTENERS Y BÚSQUEDA LOCAL
     // ---------------------------------------------------------
     
-    // LÓGICA DE BÚSQUEDA INSTANTÁNEA (FILTRO LOCAL)
+    // LÓGICA DE BÚSQUEDA INSTANTÁNEA
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
-            // 1. Obtenemos el texto y lo ponemos en minúsculas
             const texto = e.target.value.toLowerCase().trim();
             
-            // 2. Si está vacío, mostramos todo
             if (texto === "") {
                 renderizarTabla(listaInvitadosGlobal);
                 return;
             }
 
-            // 3. Filtramos la lista global
             const invitadosFiltrados = listaInvitadosGlobal.filter(invitado => {
-                // Obtenemos los valores en minúsculas para comparar
                 const doc = String(invitado.documento || "").toLowerCase();
                 const nom = (invitado.nombre || invitado.nombres || "").toLowerCase();
-                
-                // Retorna TRUE si el documento O el nombre contienen el texto escrito
                 return doc.includes(texto) || nom.includes(texto);
             });
 
-            // 4. Renderizamos los resultados filtrados
             renderizarTabla(invitadosFiltrados);
         });
     }
 
-    // Cerrar Sesión
+    // CERRAR SESIÓN CON CONFIRMACIÓN
     if(btnLogout) {
         btnLogout.addEventListener('click', (e) => {
             e.preventDefault();
-            localStorage.clear(); 
-            window.location.href = 'login.html';
+            
+            Swal.fire({
+                title: 'Cerrando sesión...',
+                timer: 1000,
+                showConfirmButton: false,
+                willClose: () => {
+                    localStorage.clear(); 
+                    window.location.href = 'login.html';
+                }
+            });
         });
     }
 

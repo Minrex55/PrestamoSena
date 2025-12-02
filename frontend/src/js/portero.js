@@ -1,12 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
     
+    // CONSTANTE DE COLOR
+    const SENA_GREEN = '#018102';
+
     // VARIABLE GLOBAL PARA ALMACENAR LOS EQUIPOS
     let listaEquiposGlobal = [];
 
     // --- INICIALIZACIÓN ---
     cargarEquipos();
 
+    // ---------------------------------------------------------
     // 1. LÓGICA DEL SIDEBAR
+    // ---------------------------------------------------------
     const menuBtn = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
@@ -26,11 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if(btnPorteros){
         btnPorteros.addEventListener('click', (e) => {
+            e.preventDefault();
             cargarEquipos();
         });
     }
 
-    // 2. LÓGICA DE PREVISUALIZACIÓN DE IMÁGENES (Tu código original)
+    // ---------------------------------------------------------
+    // 2. LÓGICA DE PREVISUALIZACIÓN DE IMÁGENES
+    // ---------------------------------------------------------
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
     const previewContainer = document.getElementById('previewContainer');
@@ -78,35 +86,46 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. FORMULARIO DE REGISTRO
+    // ---------------------------------------------------------
+    // 3. FORMULARIO DE REGISTRO (SIMULACIÓN ACTUALIZADA)
+    // ---------------------------------------------------------
     const pcForm = document.getElementById('pcForm');
     if(pcForm) {
         pcForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            
             // Aquí iría tu fetch POST real...
-            alert(`Simulación: Equipo registrado.`);
-            pcForm.reset();
-            if(previewContainer) previewContainer.innerHTML = "";
-            cargarEquipos();
+            
+            // Reemplazo del alert por SweetAlert
+            Swal.fire({
+                icon: 'success',
+                title: '¡Equipo Registrado!',
+                text: 'El equipo ha sido ingresado al sistema.',
+                confirmButtonColor: SENA_GREEN,
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                pcForm.reset();
+                if(previewContainer) previewContainer.innerHTML = "";
+                // Recargar la tabla para ver el nuevo (si fuera real)
+                cargarEquipos(); 
+            });
         });
     }
 
-    // ==========================================
-    // 4. LÓGICA DE BÚSQUEDA (NUEVO)
-    // ==========================================
+    // ---------------------------------------------------------
+    // 4. LÓGICA DE BÚSQUEDA
+    // ---------------------------------------------------------
     const searchInput = document.getElementById('searchInput');
     
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             const texto = e.target.value.toLowerCase().trim();
             
-            // Si el campo está vacío, mostramos todos
             if (texto === "") {
                 renderizarTabla(listaEquiposGlobal);
                 return;
             }
 
-            // Filtramos por Modelo O por Serial O por ID Invitado
             const equiposFiltrados = listaEquiposGlobal.filter(equipo => {
                 const idinvitado = String(equipo.idinvitado || "").toLowerCase();
                 const modelo = (equipo.modelo || "").toLowerCase();
@@ -119,16 +138,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==========================================
+    // ---------------------------------------------------------
     // 5. OBTENER DATOS DEL BACKEND
-    // ==========================================
+    // ---------------------------------------------------------
     async function cargarEquipos() {
         const token = localStorage.getItem('token');
+        const tbody = document.querySelector('.sena-table tbody');
         
         if (!token) {
             window.location.href = 'login.html';
             return;
         }
+
+        // Loader dentro de la tabla
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center"><i class="fas fa-spinner fa-spin"></i> Cargando equipos...</td></tr>';
 
         try {
             const response = await fetch('http://localhost:3333/portero/equipo/buscar', {
@@ -140,18 +163,23 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.status === 401 || response.status === 403) {
-                alert('Tu sesión ha expirado.');
-                localStorage.removeItem('token');
-                window.location.href = 'login.html';
+                // Alerta de sesión expirada
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sesión Expirada',
+                    text: 'Por favor inicia sesión nuevamente.',
+                    confirmButtonColor: SENA_GREEN
+                }).then(() => {
+                    localStorage.removeItem('token');
+                    window.location.href = 'login.html';
+                });
                 return;
             }
 
             const data = await response.json();
             
             if (data.equiposObtenidos && data.equiposObtenidos.length > 0) {
-                // Guardamos los datos en la variable global
                 listaEquiposGlobal = data.equiposObtenidos;
-                // Dibujamos la tabla inicial
                 renderizarTabla(listaEquiposGlobal);
             } else {
                 listaEquiposGlobal = [];
@@ -160,43 +188,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error("Error cargando equipos:", error);
-            const tbody = document.querySelector('.sena-table tbody');
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Error de conexión.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Error de conexión con el servidor.</td></tr>';
         }
     }
 
-    // ==========================================
-    // 6. RENDERIZAR TABLA (NUEVO - REUTILIZABLE)
-    // ==========================================
+    // ---------------------------------------------------------
+    // 6. RENDERIZAR TABLA
+    // ---------------------------------------------------------
     function renderizarTabla(listaEquipos) {
         const tbody = document.querySelector('.sena-table tbody');
-        tbody.innerHTML = ''; // Limpiar tabla actual
+        tbody.innerHTML = ''; 
 
         if (listaEquipos.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No se encontraron equipos.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No se encontraron equipos registrados.</td></tr>';
             return;
         }
 
         listaEquipos.forEach(equipo => {
             const row = document.createElement('tr');
             
-            // OBTENER ID (Asegúrate que tu DB devuelve _id o idequipo)
             const idEquipo = equipo.idequipo || equipo._id;
 
+            // HTML de la fila
             row.innerHTML = `
                 <td>${equipo.modelo || 'Sin Modelo'}</td>
                 <td>${equipo.numerodeserie || 'Sin Serial'}</td>
                 <td>${equipo.idinvitado || 'No asignado'}</td>
-                <td><span class="badge ${equipo.estado === 'Activo' ? 'status-active' : 'status-inactive'}">
-            ${equipo.estado ==='Activo' ? 'Activo' : 'Inactivo'}
-        </span></td>
+                <td>
+                    <span class="badge ${equipo.estado === 'Activo' ? 'status-active' : 'status-inactive'}">
+                        ${equipo.estado ==='Activo' ? 'Activo' : 'Inactivo'}
+                    </span>
+                </td>
                 <td>
                     <div class="action-buttons">
-                        <!-- Aquí se inyecta el ID en la función onclick -->
-                        <button class="btn-edit" onclick="editarEquipo('${idEquipo}')">
+                        <!-- Corregido: Solo pasamos ID, el rol no es necesario aquí -->
+                        <button class="btn-edit" onclick="editarEquipo('${idEquipo}')" title="Editar">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn-delete" onclick="eliminarEquipo('${idEquipo}')">
+                        <button class="btn-delete" onclick="eliminarEquipo('${idEquipo}')" title="Eliminar">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
@@ -206,37 +235,86 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Exportar para uso global si es necesario
+    // Exportar para uso global
     window.cargarEquiposGlobal = cargarEquipos; 
 });
 
-// --- FUNCIONES GLOBALES ---
 
-function editarEquipo(id, rol) {
-    // Redirige a la página de edición poniendo los datos en la URL
-    window.location.href = `editdevice.html?id=${id}&rol=${rol}`;
+// ---------------------------------------------------------
+// FUNCIONES GLOBALES (FUERA DEL DOMCONTENTLOADED)
+// ---------------------------------------------------------
+
+// Color global para SweetAlert fuera del evento
+const SENA_GREEN_GLOBAL = '#018102';
+
+function editarEquipo(id) {
+    // Redirige a la página de edición
+    window.location.href = `editdevice.html?id=${id}`;
 }
 
 window.eliminarEquipo = async (id) => {
-    if(!confirm('¿Estás seguro de que deseas eliminar este equipo?')) return;
+    
+    // 1. Confirmación con SweetAlert
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Vas a eliminar este equipo del sistema. Esta acción no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: SENA_GREEN_GLOBAL,
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then(async (result) => {
+        
+        if (result.isConfirmed) {
+            
+            const token = localStorage.getItem('token');
+            
+            // 2. Loading...
+            Swal.fire({
+                title: 'Eliminando...',
+                text: 'Espere un momento',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            });
 
-    const token = localStorage.getItem('token');
-    try {
-        const response = await fetch(`http://localhost:3333/portero/equipo/eliminar/${id}`, {
-            method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
+            try {
+                const response = await fetch(`http://localhost:3333/portero/equipo/eliminar/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
 
-        if (response.ok) {
-            alert('Equipo eliminado correctamente.');
-            // Recargamos la lista completa del servidor
-            if(window.cargarEquiposGlobal) window.cargarEquiposGlobal(); 
-        } else {
-            const data = await response.json();
-            alert('Error: ' + (data.mensaje || 'No se pudo eliminar'));
+                if (response.ok) {
+                    // 3. Éxito
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Eliminado',
+                        text: 'El equipo ha sido eliminado correctamente.',
+                        confirmButtonColor: SENA_GREEN_GLOBAL
+                    }).then(() => {
+                        // Recargamos la tabla
+                        if(window.cargarEquiposGlobal) window.cargarEquiposGlobal(); 
+                    });
+
+                } else {
+                    // Error Backend
+                    const data = await response.json();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.mensaje || 'No se pudo eliminar el equipo',
+                        confirmButtonColor: SENA_GREEN_GLOBAL
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error de conexión',
+                    text: 'No se pudo conectar con el servidor',
+                    confirmButtonColor: SENA_GREEN_GLOBAL
+                });
+            }
         }
-    } catch (error) {
-        console.error(error);
-        alert('Error de conexión');
-    }
+    });
 };

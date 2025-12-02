@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // CONSTANTE DE COLOR
+    const SENA_GREEN = '#018102';
+
     // =========================================================
     // 0. VERIFICACIÓN DE SEGURIDAD
     // =========================================================
@@ -8,8 +11,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const idUsuario = localStorage.getItem('idUsuario');
 
     if (!token || !idUsuario || rol !== 'Invitado') {
-        alert("No has iniciado sesión o no tienes permisos.");
-        window.location.href = 'login.html'; 
+        Swal.fire({
+            icon: 'error',
+            title: 'Acceso Denegado',
+            text: 'No has iniciado sesión o no tienes permisos.',
+            confirmButtonColor: SENA_GREEN,
+            allowOutsideClick: false
+        }).then(() => {
+            window.location.href = 'login.html'; 
+        });
         return;
     }
 
@@ -23,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
 
-    // Secciones (Tarjetas)
+    // Secciones
     const sectionPerfil = document.getElementById('perfil');
     const sectionEquipos = document.getElementById('equipos');
 
@@ -42,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const passInput = document.getElementById('password');
     const confirmPassInput = document.getElementById('confirm_password');
     
-    // Botones de Ojo (Ver contraseña)
+    // Botones de Ojo
     const togglePassBtn = document.getElementById('togglePassBtn');
     const toggleConfirmBtn = document.getElementById('toggleConfirmPassBtn');
 
@@ -53,35 +63,39 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. LÓGICA DE NAVEGACIÓN (TABS)
     // =========================================================
 
-    linkPerfil.addEventListener('click', (e) => {
-        e.preventDefault();
-        mostrarSeccion('perfil');
-        cargarDatosPerfil();
-    });
+    if(linkPerfil) {
+        linkPerfil.addEventListener('click', (e) => {
+            e.preventDefault();
+            mostrarSeccion('perfil');
+            cargarDatosPerfil();
+        });
+    }
 
-    linkEquipos.addEventListener('click', (e) => {
-        e.preventDefault();
-        mostrarSeccion('equipos');
-        cargarEquipos();
-    });
+    if(linkEquipos) {
+        linkEquipos.addEventListener('click', (e) => {
+            e.preventDefault();
+            mostrarSeccion('equipos');
+            cargarEquipos();
+        });
+    }
 
     function mostrarSeccion(seccion) {
         if (seccion === 'perfil') {
-            sectionPerfil.classList.remove('hidden');
-            sectionEquipos.classList.add('hidden');
-            linkPerfil.classList.add('active');
-            linkEquipos.classList.remove('active');
+            if(sectionPerfil) sectionPerfil.classList.remove('hidden');
+            if(sectionEquipos) sectionEquipos.classList.add('hidden');
+            if(linkPerfil) linkPerfil.classList.add('active');
+            if(linkEquipos) linkEquipos.classList.remove('active');
         } else {
-            sectionPerfil.classList.add('hidden');
-            sectionEquipos.classList.remove('hidden');
-            linkPerfil.classList.remove('active');
-            linkEquipos.classList.add('active');
+            if(sectionPerfil) sectionPerfil.classList.add('hidden');
+            if(sectionEquipos) sectionEquipos.classList.remove('hidden');
+            if(linkPerfil) linkPerfil.classList.remove('active');
+            if(linkEquipos) linkEquipos.classList.add('active');
         }
         if (window.innerWidth <= 768) toggleMenu();
     }
 
-    // Inicializar vista
-    sectionEquipos.classList.add('hidden');
+    // Inicializar vista (Ocultar equipos al inicio)
+    if(sectionEquipos) sectionEquipos.classList.add('hidden');
 
     // =========================================================
     // 3. CONSUMO DE API - CARGAR PERFIL (GET)
@@ -95,6 +109,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Authorization': `Bearer ${token}`
                 }
             });
+
+            if(response.status === 401) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sesión caducada',
+                    confirmButtonColor: SENA_GREEN
+                }).then(() => window.location.href = 'login.html');
+                return;
+            }
 
             if (!response.ok) throw new Error('Error al obtener perfil');
 
@@ -110,7 +133,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error(error);
-            alert('No se pudo cargar la información del usuario.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de conexión',
+                text: 'No se pudo cargar tu información de perfil.',
+                confirmButtonColor: SENA_GREEN
+            });
         }
     }
 
@@ -118,6 +146,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. CONSUMO DE API - CARGAR EQUIPOS (GET)
     // =========================================================
     async function cargarEquipos() {
+        if(!tablaEquiposBody) return;
+
+        // Loader dentro de la tabla
+        tablaEquiposBody.innerHTML = '<tr><td colspan="4" style="text-align:center;"><i class="fas fa-spinner fa-spin"></i> Cargando tus equipos...</td></tr>';
+
         try {
             const response = await fetch(`${API_URL}/invitado/equipos/${idUsuario}`, {
                 method: 'GET',
@@ -145,9 +178,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         <td>${eq.modelo || ''}</td>
                         <td><strong>${eq.numerodeserie}</strong></td>
                         <td>${formatearFecha(eq.fecha_ingreso)}</td>
-                        <td><span class="badge ${eq.estado === 'Activo' ? 'status-active' : 'status-inactive'}">
-            ${eq.estado ==='Activo' ? 'Activo' : 'Inactivo'}
-        </span></td>
+                        <td>
+                            <span class="badge ${eq.estado === 'Activo' ? 'status-active' : 'status-inactive'}">
+                                ${eq.estado ==='Activo' ? 'Activo' : 'Inactivo'}
+                            </span>
+                        </td>
                     </tr>
                 `;
                 tablaEquiposBody.innerHTML += row;
@@ -187,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================
-    // 6. VISIBILIDAD DE CONTRASEÑA (OJITOS)
+    // 6. VISIBILIDAD DE CONTRASEÑA
     // =========================================================
     function toggleVisibility(inputElement, iconElement) {
         const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -196,14 +231,12 @@ document.addEventListener('DOMContentLoaded', () => {
         iconElement.classList.toggle('fa-eye-slash');
     }
 
-    // Evento para campo Contraseña
     if (togglePassBtn && passInput) {
         togglePassBtn.addEventListener('click', () => {
             toggleVisibility(passInput, togglePassBtn);
         });
     }
 
-    // Evento para campo Confirmar
     if (toggleConfirmBtn && confirmPassInput) {
         toggleConfirmBtn.addEventListener('click', () => {
             toggleVisibility(confirmPassInput, toggleConfirmBtn);
@@ -219,24 +252,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // A. Validar coincidencia
             if (passInput.value !== confirmPassInput.value) {
-                alert("Las contraseñas no coinciden.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Error de contraseñas',
+                    text: 'Las contraseñas nuevas no coinciden.',
+                    confirmButtonColor: SENA_GREEN
+                });
                 return;
             }
 
-            // B. Validar que la contraseña no esté vacía (Requerido por Backend)
+            // B. Validar que la contraseña no esté vacía
             if (!passInput.value) {
-                alert("Para actualizar datos, debes ingresar una contraseña válida (nueva o la actual) por seguridad.");
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Contraseña requerida',
+                    text: 'Por seguridad, debes ingresar tu contraseña (o una nueva) para guardar cambios.',
+                    confirmButtonColor: SENA_GREEN
+                });
                 return;
             }
 
-            // C. Preparar objeto para el Backend (t1...t5)
+            // C. Preparar objeto para el Backend
             const datosParaEnviar = {
-                t1: documentoInput.value, // Documento
-                t2: nombreInput.value,    // Nombres
-                t3: telefonoInput.value,  // Teléfono
-                t4: correoInput.value,    // Correo
-                t5: passInput.value       // Contraseña
+                t1: documentoInput.value,
+                t2: nombreInput.value,
+                t3: telefonoInput.value,
+                t4: correoInput.value,
+                t5: passInput.value
             };
+
+            // D. Loading
+            Swal.fire({
+                title: 'Actualizando datos...',
+                text: 'Por favor espere',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            });
 
             try {
                 const response = await fetch(`${API_URL}/invitado/${idUsuario}`, {
@@ -254,58 +305,52 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error(result.mensaje || "Error al actualizar");
                 }
 
-                alert("¡Datos actualizados correctamente!");
-                
-                // Limpiar contraseña y recargar
-                passInput.value = '';
-                confirmPassInput.value = '';
-                cargarDatosPerfil();
+                // ÉXITO
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Actualizado!',
+                    text: 'Tus datos han sido modificados correctamente.',
+                    confirmButtonColor: SENA_GREEN
+                }).then(() => {
+                    passInput.value = '';
+                    confirmPassInput.value = '';
+                    cargarDatosPerfil();
+                });
 
             } catch (error) {
                 console.error("Error update:", error);
-                alert(error.message);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message || 'No se pudieron guardar los cambios.',
+                    confirmButtonColor: SENA_GREEN
+                });
             }
         });
     }
-    const sidebarLinks = document.querySelectorAll('.sidebar-nav a[href^="#"]');
 
+    // Lógica extra para scroll suave (si se usa en móviles)
+    const sidebarLinks = document.querySelectorAll('.sidebar-nav a[href^="#"]');
     sidebarLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault(); // Evita el comportamiento por defecto
-
-            const targetId = this.getAttribute('href'); // Obtiene "#equipos" o "#perfil"
-            const targetSection = document.querySelector(targetId);
-
-            if (targetSection) {
-                // Opción 1: Scroll suave automático (Soportado en navegadores modernos)
-                targetSection.scrollIntoView({ 
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-
-                // Opción 2 (Alternativa): Si tienes un header fijo que tapa el título
-                // Descomenta las siguientes líneas si el título queda oculto bajo la barra superior
-                /*
-                const headerOffset = 80; // Altura de tu top-bar + un poco de espacio
-                const elementPosition = targetSection.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                
-                // Buscamos el contenedor que tiene el scroll (probablemente .main-content)
-                const mainContent = document.querySelector('.main-content');
-                mainContent.scrollTo({
-                    top: mainContent.scrollTop + elementPosition - headerOffset,
-                    behavior: "smooth"
-                });
-                */
-
-                // CERRAR MENÚ EN MÓVIL (Opcional)
-                // Si estás en celular, cerramos el sidebar al hacer click
-                const sidebar = document.getElementById('sidebar');
-                const overlay = document.getElementById('overlay');
-                if (sidebar.classList.contains('active')) {
-                    sidebar.classList.remove('active');
-                    overlay.classList.remove('active');
-                }
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            
+            // Si son los mismos tabs que arriba, ya se manejan en mostrarSeccion
+            // Si son anclas diferentes, ejecutamos el scroll
+            if(targetId !== '#perfil' && targetId !== '#equipos') {
+                 const targetSection = document.querySelector(targetId);
+                 if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                 }
+            }
+            
+            // Cerrar menú en móvil
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            if (sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
             }
         });
     });
