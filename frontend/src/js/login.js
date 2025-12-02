@@ -17,8 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
             t2: password
         };
 
-        // Lista de intentos de login en orden de prioridad
-        // Asegúrate de crear los archivos .html de redirección o ajustar las rutas
         const intentos = [
             {
                 rol: 'Administrador',
@@ -28,18 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
             {
                 rol: 'Portero',
                 url: 'http://localhost:3333/loginportero/login',
-                redirect: './deviceregister.html' // Crea este archivo o cambia la ruta
+                redirect: './deviceregister.html'
             },
             {
                 rol: 'Invitado',
                 url: 'http://localhost:3333/logininvitado/login',
-                redirect: './index.html'
+                redirect: './usuario.html'
             }
         ];
 
         let loginExitoso = false;
 
-        // Recorremos las rutas una por una
         for (const intento of intentos) {
             try {
                 const response = await fetch(intento.url, {
@@ -51,24 +48,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     const data = await response.json();
                     
-                    // LOGIN EXITOSO
                     console.log(`Logueado como ${intento.rol}`);
+                    console.log("Datos recibidos:", data); // Para ver qué llega exactamente
                     
-                    // Guardamos el token y datos
+                    // 1. Guardamos token y rol
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('rol', intento.rol);
                     
-                    // Si el backend devuelve el objeto del usuario (Ej: data.Portero, data.Administrador)
-                    // Podrías guardarlo también si lo necesitas.
+                    // 2. CORRECCIÓN AQUÍ: Guardamos el ID
+                    let idGuardado = null;
+
+                    // Tu controlador devuelve { Invitado: { ... } } (Con I mayúscula)
+                    if (data.Invitado) {
+                        // Busca el id en las propiedades comunes
+                        idGuardado = data.Invitado.id || data.Invitado.idinvitado || data.Invitado.documento || data.Invitado._id;
+                    } 
+                    // Por si acaso el backend cambia o para los otros roles (Admin/Portero)
+                    else if (data.invitado) {
+                        idGuardado = data.invitado.id;
+                    } 
+                    else if (data.id) {
+                        idGuardado = data.id;
+                    }
+
+                    // Si encontramos un ID, lo guardamos
+                    if (idGuardado) {
+                        localStorage.setItem('idUsuario', idGuardado);
+                        console.log("ID Usuario guardado:", idGuardado);
+                    } else {
+                        console.warn("ATENCIÓN: No se encontró el ID en la respuesta del servidor.");
+                    }
 
                     alert(`Bienvenido ${intento.rol}`);
                     window.location.href = intento.redirect;
                     
                     loginExitoso = true;
-                    break; // Rompemos el ciclo porque ya encontramos al usuario
+                    break; 
                 }
             } catch (error) {
-                // Si hay error de conexión, seguimos intentando o lo mostramos en consola
                 console.warn(`No se pudo conectar con ruta de ${intento.rol}`, error);
             }
         }

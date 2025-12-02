@@ -22,6 +22,7 @@ class PorteroRutas {
 
     configurarRutas() {
     // Proteger todas las rutas
+    
         this.router.use((req, res, next) => AuthMiddleware.autenticar(req, res, next));
         this.router.use(RoleMiddleware.verificarRol('Administrador'));
 
