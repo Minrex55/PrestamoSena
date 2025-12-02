@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // =========================================================
     // 0. VERIFICACIÓN DE SEGURIDAD
     // =========================================================
@@ -9,11 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!token || !idUsuario || rol !== 'Invitado') {
         alert("No has iniciado sesión o no tienes permisos.");
-        window.location.href = 'index.html'; // O tu página de login
+        window.location.href = 'index.html'; 
         return;
     }
 
-    // Configuración de la URL base de tu API
+    // Configuración de la URL base
     const API_URL = 'http://localhost:3333';
 
     // =========================================================
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuBtn = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
-    
+
     // Secciones (Tarjetas)
     const sectionPerfil = document.getElementById('perfil');
     const sectionEquipos = document.getElementById('equipos');
@@ -32,10 +32,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const linkEquipos = document.querySelector('a[href="#equipos"]');
 
     // Inputs del Formulario Perfil
+    const updateForm = document.getElementById('updateForm');
     const documentoInput = document.getElementById('documento');
     const nombreInput = document.getElementById('nombres');
     const correoInput = document.getElementById('correo');
     const telefonoInput = document.getElementById('telefono');
+    
+    // Inputs Contraseña
+    const passInput = document.getElementById('password');
+    const confirmPassInput = document.getElementById('confirm_password');
+    
+    // Botones de Ojo (Ver contraseña)
+    const togglePassBtn = document.getElementById('togglePassBtn');
+    const toggleConfirmBtn = document.getElementById('toggleConfirmPassBtn');
 
     // Tabla de Equipos
     const tablaEquiposBody = document.querySelector('.sena-table tbody');
@@ -43,19 +52,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // =========================================================
     // 2. LÓGICA DE NAVEGACIÓN (TABS)
     // =========================================================
-    
-    // Función para mostrar Perfil
+
     linkPerfil.addEventListener('click', (e) => {
         e.preventDefault();
         mostrarSeccion('perfil');
-        cargarDatosPerfil(); // Recargar datos al hacer click
+        cargarDatosPerfil();
     });
 
-    // Función para mostrar Equipos
     linkEquipos.addEventListener('click', (e) => {
         e.preventDefault();
         mostrarSeccion('equipos');
-        cargarEquipos(); // Cargar equipos al hacer click
+        cargarEquipos();
     });
 
     function mostrarSeccion(seccion) {
@@ -70,15 +77,14 @@ document.addEventListener('DOMContentLoaded', () => {
             linkPerfil.classList.remove('active');
             linkEquipos.classList.add('active');
         }
-        // Cerrar menú en móvil si está abierto
         if (window.innerWidth <= 768) toggleMenu();
     }
 
-    // Inicializar vista (ocultar equipos al inicio)
+    // Inicializar vista
     sectionEquipos.classList.add('hidden');
 
     // =========================================================
-    // 3. CONSUMO DE API - CARGAR PERFIL
+    // 3. CONSUMO DE API - CARGAR PERFIL (GET)
     // =========================================================
     async function cargarDatosPerfil() {
         try {
@@ -86,19 +92,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` // Enviamos el token
+                    'Authorization': `Bearer ${token}`
                 }
             });
 
             if (!response.ok) throw new Error('Error al obtener perfil');
 
             const data = await response.json();
-            // Asumiendo que tu backend devuelve { mensaje: "...", invitado: { ... } }
             const user = data.invitado; 
 
             if (user) {
-                // Rellenar inputs
-                // Asegúrate que los nombres de las propiedades coincidan con tu base de datos
                 if(documentoInput) documentoInput.value = user.documento || user.id || '';
                 if(nombreInput)    nombreInput.value = user.nombre_completo || user.nombres || '';
                 if(correoInput)    correoInput.value = user.correopersonal || '';
@@ -112,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================
-    // 4. CONSUMO DE API - CARGAR EQUIPOS
+    // 4. CONSUMO DE API - CARGAR EQUIPOS (GET)
     // =========================================================
     async function cargarEquipos() {
         try {
@@ -127,19 +130,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error('Error al obtener equipos');
 
             const data = await response.json();
-            const listaEquipos = data.equipos; // Según tu controlador devuelve { equipos: [...] }
+            const listaEquipos = data.equipos;
 
-            // Limpiar tabla actual
             tablaEquiposBody.innerHTML = '';
 
-            if (listaEquipos.length === 0) {
+            if (!listaEquipos || listaEquipos.length === 0) {
                 tablaEquiposBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No tienes equipos registrados.</td></tr>';
                 return;
             }
 
-            // Rellenar tabla
             listaEquipos.forEach(eq => {
-                // Ajusta las propiedades (eq.marca, eq.serial) según tu base de datos
                 const row = `
                     <tr>
                         <td>${eq.modelo || ''}</td>
@@ -157,7 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Función auxiliar para fechas
     function formatearFecha(fechaString) {
         if (!fechaString) return 'N/A';
         const fecha = new Date(fechaString);
@@ -165,12 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================
-    // 5. CARGA INICIAL
-    // =========================================================
-    cargarDatosPerfil(); // Cargar datos apenas abra la página
-
-    // =========================================================
-    // 6. MENÚ LATERAL (Tu lógica original)
+    // 5. MENÚ LATERAL
     // =========================================================
     function toggleMenu() {
         sidebar.classList.toggle('active');
@@ -183,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleMenu();
         });
     }
-    
+
     if (overlay) {
         overlay.addEventListener('click', () => {
             if (sidebar.classList.contains('active')) toggleMenu();
@@ -191,8 +185,87 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================================
-    // 7. LÓGICA DE VALIDACIÓN (Simplificada para no alargar)
+    // 6. VISIBILIDAD DE CONTRASEÑA (OJITOS)
     // =========================================================
-    // Aquí puedes pegar tus validaciones (Regex, etc) que tenías antes
-    // para el formulario de actualización.
+    function toggleVisibility(inputElement, iconElement) {
+        const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
+        inputElement.setAttribute('type', type);
+        iconElement.classList.toggle('fa-eye');
+        iconElement.classList.toggle('fa-eye-slash');
+    }
+
+    // Evento para campo Contraseña
+    if (togglePassBtn && passInput) {
+        togglePassBtn.addEventListener('click', () => {
+            toggleVisibility(passInput, togglePassBtn);
+        });
+    }
+
+    // Evento para campo Confirmar
+    if (toggleConfirmBtn && confirmPassInput) {
+        toggleConfirmBtn.addEventListener('click', () => {
+            toggleVisibility(confirmPassInput, toggleConfirmBtn);
+        });
+    }
+
+    // =========================================================
+    // 7. ACTUALIZAR PERFIL (PUT)
+    // =========================================================
+    if (updateForm) {
+        updateForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // A. Validar coincidencia
+            if (passInput.value !== confirmPassInput.value) {
+                alert("Las contraseñas no coinciden.");
+                return;
+            }
+
+            // B. Validar que la contraseña no esté vacía (Requerido por Backend)
+            if (!passInput.value) {
+                alert("Para actualizar datos, debes ingresar una contraseña válida (nueva o la actual) por seguridad.");
+                return;
+            }
+
+            // C. Preparar objeto para el Backend (t1...t5)
+            const datosParaEnviar = {
+                t1: documentoInput.value, // Documento
+                t2: nombreInput.value,    // Nombres
+                t3: telefonoInput.value,  // Teléfono
+                t4: correoInput.value,    // Correo
+                t5: passInput.value       // Contraseña
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/invitado/${idUsuario}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(datosParaEnviar)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.mensaje || "Error al actualizar");
+                }
+
+                alert("¡Datos actualizados correctamente!");
+                
+                // Limpiar contraseña y recargar
+                passInput.value = '';
+                confirmPassInput.value = '';
+                cargarDatosPerfil();
+
+            } catch (error) {
+                console.error("Error update:", error);
+                alert(error.message);
+            }
+        });
+    }
+
+    // Carga inicial
+    cargarDatosPerfil();
 });

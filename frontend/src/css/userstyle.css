@@ -137,6 +137,12 @@ input.valid {
 /* Toggle Password (Ojito) */
 .password-wrapper {
     position: relative;
+    width: 100%;
+}
+
+/* Ajuste para que el texto no se monte sobre el ojo */
+.password-wrapper input {
+    padding-right: 40px; 
 }
 
 .toggle-password {
