@@ -1,6 +1,6 @@
 import express from 'express';
-//import AuthMiddleware from "../../middlewares/AuthMiddleware.js";
-//import RoleMiddleware from "../../middlewares/RoleMiddleware.js";
+import AuthMiddleware from "../../middlewares/AuthMiddleware.js";
+import RoleMiddleware from "../../middlewares/RoleMiddleware.js";
 
 
 import ObtenerEquipoControlador from '../../controlador/Portero/ObtenerEquipoControlador.js'
@@ -22,8 +22,8 @@ class PorteroRutas {
 
     configurarRutas() {
     // Proteger todas las rutas
-        //this.router.use((req, res, next) => AuthMiddleware.autenticar(req, res, next));
-        //this.router.use(RoleMiddleware.verificarRol('Administrador'));
+        this.router.use((req, res, next) => AuthMiddleware.autenticar(req, res, next));
+        this.router.use(RoleMiddleware.verificarRol('Administrador'));
 
         this.router.post('/equipo/crear', CrearEquipoControlador.crearEquipo);
         this.router.get('/equipo/modelo', ObtenerEquipoControlador.obtenerEquipoPorModelo);
