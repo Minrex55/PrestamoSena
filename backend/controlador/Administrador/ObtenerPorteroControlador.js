@@ -1,7 +1,7 @@
 import ObtenerPorteroModelo from '../../modelo/Administrador/ObtenerPorteroModelo.js';
 
 class ObtenerPorteroControlador {
-    constructuor() {
+    constructor() {
         if (ObtenerPorteroControlador.instance) {
             return ObtenerPorteroControlador.instance;
         }

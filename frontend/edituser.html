@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IngreSENA - Editar Usuario</title>
     
-    <!-- AQUÍ VINCULAMOS EL CSS ESPECÍFICO DE ESTA PÁGINA -->
+    <!-- CSS -->
     <link rel="stylesheet" href="./src/css/edituserstlye.css">
-    
     <link rel="shortcut icon" href="./src/media/logo_sena.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- Overlay para móvil -->
     <div class="overlay" id="overlay"></div>
 
     <div class="admin-container">
@@ -29,10 +27,7 @@
             
             <nav class="sidebar-nav">
                 <ul>
-                    <!-- Nota: El enlace vuelve a admin.html -->
-                    <li><a href="admin.html"><i class="fas fa-users"></i> Usuarios</a></li>
-                    <li><a href="#"><i class="fas fa-chart-line"></i> Reportes</a></li>
-                    <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
+                    <li><a href="adminpanel.html"><i class="fas fa-users"></i> Usuarios</a></li>
                     <li class="logout-item"><a href="index.html"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
                 </ul>
             </nav>
@@ -49,66 +44,64 @@
             </header>
 
             <div class="content-wrapper">
-                
                 <div class="back-link">
-                    <a href="admin.html"><i class="fas fa-arrow-left"></i> Volver a la lista</a>
+                    <a href="adminpanel.html"><i class="fas fa-arrow-left"></i> Volver a la lista</a>
                 </div>
 
                 <div class="card-form">
                     <div class="card-header">
                         <h3>Editar Información del Usuario</h3>
+                        <p>Modifique los datos necesarios. <strong>La contraseña es obligatoria.</strong></p>
                     </div>
                     
                     <form id="editUserForm" class="edit-form">
                         <div class="form-grid">
-                            <!-- Documento (Solo lectura) -->
+                            
+                            <!-- Documento (t1) -->
                             <div class="form-group">
-                                <label for="documento">Documento de Identidad</label>
-                                <input type="text" id="documento" value="1001234567" readonly class="input-readonly">
-                                <small>El documento no se puede modificar.</small>
+                                <label for="documento">Documento de Identidad <span class="required">*</span></label>
+                                <input type="number" id="documento" required>
                             </div>
 
-                            <!-- Nombres -->
+                            <!-- Nombres (t2) -->
                             <div class="form-group">
-                                <label for="nombres">Nombres y Apellidos</label>
-                                <input type="text" id="nombres" value="Juan Pérez" required>
+                                <label for="nombres">Nombres y Apellidos <span class="required">*</span></label>
+                                <input type="text" id="nombres" required>
                             </div>
 
-                            <!-- Correo -->
+                            <!-- Correo (t4) -->
                             <div class="form-group">
-                                <label for="email">Correo Electrónico</label>
-                                <input type="email" id="email" value="jperez@soy.sena.edu.co" required>
+                                <label for="email">Correo Electrónico <span class="required">*</span></label>
+                                <input type="email" id="email" required>
                             </div>
 
-                            <!-- Teléfono -->
+                            <!-- Teléfono (t3) -->
                             <div class="form-group">
-                                <label for="telefono">Teléfono / Celular</label>
-                                <input type="tel" id="telefono" value="3001234567" required>
+                                <label for="telefono">Teléfono / Celular <span class="required">*</span></label>
+                                <input type="tel" id="telefono" required>
                             </div>
 
-                            <!-- Rol -->
+                            <!-- Rol (Solo visual) -->
                             <div class="form-group">
-                                <label for="rol">Rol del Usuario</label>
-                                <select id="rol" required>
-                                    <option value="aprendiz">Aprendiz</option>
-                                    <option value="instructor">Instructor</option>
-                                    <option value="admin" selected>Administrador</option>
-                                    <option value="vigilante">Vigilante</option>
+                                <label for="rol">Rol del Usuario (No editable)</label>
+                                <select id="rol" disabled style="background-color: #e9ecef; cursor: not-allowed;">
+                                    <option value="Administrador">Administrador</option>
+                                    <option value="Portero">Portero</option>
                                 </select>
                             </div>
 
-                            <!-- Estado -->
+                            <!-- Contraseña (t5) -->
                             <div class="form-group">
-                                <label for="estado">Estado de la cuenta</label>
-                                <select id="estado" required class="select-status">
-                                    <option value="activo" selected>Activo</option>
-                                    <option value="inactivo">Inactivo</option>
-                                </select>
+                                <label for="password">Confirmar o Nueva Contraseña <span class="required">*</span></label>
+                                <div class="password-wrapper" style="position: relative;">
+                                    <input type="password" id="password" placeholder="Ingrese contraseña obligatoria" required>
+                                    <i class="fas fa-eye toggle-password" id="togglePassword" style="position: absolute; right: 10px; top: 10px; cursor: pointer;"></i>
+                                </div>
                             </div>
                         </div>
 
                         <div class="form-actions">
-                            <a href="admin.html" class="btn-cancel">Cancelar</a>
+                            <a href="adminpanel.html" class="btn-cancel">Cancelar</a>
                             <button type="submit" class="btn-save">Guardar Cambios</button>
                         </div>
                     </form>
@@ -117,8 +110,6 @@
         </main>
     </div>
 
-    <!-- Puedes usar el mismo JS de admin si tiene la lógica del menú, 
-         o crear edit-user.js con la lógica de envío -->
     <script src="./src/js/edituser.js"></script>
 </body>
 </html>
