@@ -30,12 +30,13 @@
                     <button type="button" id="btnSendCode" class="btn-side">Enviar</button>
                 </div>
 
-                <!-- Campo Código -->
-                <div class="input-group">
+                <!-- Campo Código (OCULTO INICIALMENTE) -->
+                <!-- Le agregué id="codeGroup" y la clase 'hidden' para que no estorbe al principio -->
+                <div id="codeGroup" class="input-group hidden fade-in">
                     <label for="code">Código de Verificación</label>
-                    <input type="text" id="code" placeholder="Ingresa el código" maxlength="6">
+                    <input type="text" id="code" placeholder="Ingresa el código de 6 dígitos" maxlength="6">
                     <small class="error-message"></small>
-                    <small class="info-text">Simulación: El código correcto es <b>123456</b></small>
+                    <small class="info-text">Revisa tu bandeja de entrada (o spam)</small>
                 </div>
 
                 <!-- Sección Contraseña (Oculta hasta validar código) -->
@@ -64,6 +65,7 @@
         </div>
     </div>
 
+    <!-- Asegúrate de que este archivo tenga el código JS actualizado que te di antes -->
     <script src="./src/js/recovery.js"></script>
 </body>
 </html>

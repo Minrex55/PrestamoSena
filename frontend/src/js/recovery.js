@@ -5,125 +5,159 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnSendCode = document.getElementById('btnSendCode');
     const codeInput = document.getElementById('code');
     const passwordSection = document.getElementById('passwordSection');
+    
+    // NUEVO: Seleccionamos el contenedor del código para mostrarlo/ocultarlo
+    const codeGroup = document.getElementById('codeGroup'); 
 
-    const CORRECT_CODE = "123456";
+    // URL de tu backend (Asegúrate de que el puerto sea el correcto)
+    const BASE_URL = 'http://localhost:3333/recovery';
 
-    // --- SISTEMA DE VALIDACIONES (IGUAL AL FORMULARIO ANTERIOR) ---
+    // --- UTILS ---
     function mostrarError(input, mensaje) {
         const group = input.parentElement;
         group.classList.add('error');
-
         let small = group.querySelector('.error-message');
         if (!small) {
             small = document.createElement('small');
             small.classList.add('error-message');
             group.appendChild(small);
         }
-
         small.innerText = mensaje;
     }
 
     function limpiarError(input) {
         const group = input.parentElement;
         group.classList.remove('error');
-
         const small = group.querySelector('.error-message');
         if (small) small.remove();
     }
 
     function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    // --------------------------------------------------------------
-
-    // 1. BOTÓN "ENVIAR" – VALIDAR EMAIL
-    btnSendCode.addEventListener('click', () => {
+    // 1. ENVIAR CÓDIGO (Fetch al Backend)
+    btnSendCode.addEventListener('click', async () => {
         const emailValue = emailInput.value.trim();
-
         limpiarError(emailInput);
 
-        if (emailValue === '') {
-            mostrarError(emailInput, "Por favor ingresa tu correo.");
+        if (!emailValue) {
+            mostrarError(emailInput, "Ingresa tu correo.");
             return;
         }
-
         if (!isValidEmail(emailValue)) {
-            mostrarError(emailInput, "El correo debe tener el siguiente formato: ejemplo@gmail.com");
+            mostrarError(emailInput, "Formato de correo inválido.");
             return;
         }
 
-        // Aquí normalmente llamarías al backend para enviar el código
-        codeInput.focus();
+        // UX: Deshabilitar botón
+        btnSendCode.innerText = "Enviando...";
+        btnSendCode.disabled = true;
+
+        try {
+            const response = await fetch(`${BASE_URL}/enviar-codigo`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: emailValue })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                alert("¡Código enviado! Revisa tu correo.");
+                
+                // --- CAMBIO CLAVE: MOSTRAR EL CAMPO DE CÓDIGO ---
+                if(codeGroup) {
+                    codeGroup.classList.remove('hidden');
+                    codeGroup.classList.add('fade-in');
+                }
+                
+                codeInput.focus();
+                btnSendCode.innerText = "Reenviar";
+                btnSendCode.disabled = false;
+            } else {
+                mostrarError(emailInput, data.message || "Error al enviar");
+                btnSendCode.innerText = "Enviar";
+                btnSendCode.disabled = false;
+            }
+        } catch (error) {
+            console.error(error);
+            mostrarError(emailInput, "Error de conexión con el servidor");
+            btnSendCode.innerText = "Enviar";
+            btnSendCode.disabled = false;
+        }
     });
 
-    // 2. VALIDACIÓN DEL CÓDIGO EN TIEMPO REAL
-    codeInput.addEventListener('input', (e) => {
+    // 2. VALIDACIÓN DEL CÓDIGO (Fetch al Backend)
+    codeInput.addEventListener('input', async (e) => {
         limpiarError(codeInput);
-
         const current = e.target.value.trim();
 
-        if (current.length === 6 && current !== CORRECT_CODE) {
-            mostrarError(codeInput, "El código es incorrecto.");
-            return;
-        }
+        // Solo consultamos al servidor si tiene 6 dígitos
+        if (current.length === 6) {
+            try {
+                const response = await fetch(`${BASE_URL}/verificar-codigo`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        email: emailInput.value.trim(),
+                        codigo: current 
+                    })
+                });
+                const data = await response.json();
 
-        if (current === CORRECT_CODE) {
-            passwordSection.classList.remove('hidden');
-            codeInput.setAttribute("readonly", true);
-            btnSendCode.disabled = true;
+                if (data.success) {
+                    // ÉXITO
+                    passwordSection.classList.remove('hidden');
+                    void passwordSection.offsetWidth; // Forzar reflow para animación
+                    passwordSection.classList.add('fade-in');
+
+                    codeInput.setAttribute("readonly", true);
+                    codeInput.style.borderColor = "#39a900"; // Verde
+                    btnSendCode.disabled = true;
+                } else {
+                    mostrarError(codeInput, "El código es incorrecto.");
+                }
+            } catch (error) {
+                console.error(error);
+            }
         }
     });
 
-    // 3. Envío final del formulario (Cambio de contraseña)
-recoveryForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+    // 3. CAMBIO DE CONTRASEÑA (Fetch al Backend)
+    recoveryForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    if (passwordSection.classList.contains('hidden')) {
-        alert('Debes ingresar el código de verificación correcto primero.');
-        return;
-    }
+        if (passwordSection.classList.contains('hidden')) return;
 
-    const newPass = document.getElementById('newPassword').value.trim();
-    const confirmPass = document.getElementById('confirmPassword').value.trim();
+        const newPass = document.getElementById('newPassword').value.trim();
+        const confirmPass = document.getElementById('confirmPassword').value.trim();
 
-    // Validaciones básicas
-    if (newPass === '' || confirmPass === '') {
-        alert('Por favor completa los campos de contraseña.');
-        return;
-    }
+        // Validaciones básicas de coincidencia
+        if (newPass !== confirmPass) {
+            alert('Las contraseñas no coinciden.');
+            return;
+        }
 
-    if (newPass !== confirmPass) {
-        alert('Las contraseñas no coinciden.');
-        return;
-    }
+        try {
+            const response = await fetch(`${BASE_URL}/cambiar-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: emailInput.value.trim(),
+                    newPassword: newPass
+                })
+            });
+            const data = await response.json();
 
-    // --- VALIDACIONES NUEVAS ---
-    const minLength = newPass.length >= 6;
-    const hasUpper = /[A-Z]/.test(newPass);
-    const hasSymbol = /[!@#$%^&*(),.?":{}|<>_\-=+]/.test(newPass);
-
-    if (!minLength) {
-        alert('La contraseña debe tener al menos 6 caracteres.');
-        return;
-    }
-
-    if (!hasUpper) {
-        alert('La contraseña debe incluir al menos una letra mayúscula.');
-        return;
-    }
-
-    if (!hasSymbol) {
-        alert('La contraseña debe incluir al menos un símbolo.');
-        return;
-    }
-
-    // Simulación de éxito
-    console.log("Contraseña actualizada para:", emailInput.value);
-    alert('¡Contraseña actualizada correctamente!');
-    window.location.href = 'login.html';
-});
-
+            if (data.success) {
+                alert('¡Contraseña actualizada correctamente!');
+                window.location.href = 'login.html';
+            } else {
+                alert('Error: ' + data.message);
+            }
+        } catch (error) {
+            alert('Error al conectar con el servidor');
+        }
+    });
 
 });

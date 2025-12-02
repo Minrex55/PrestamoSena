@@ -7,6 +7,7 @@ import PorteroRutas from  "./vista/Portero/PorteroRutas.js"
 import LoginPorteroRutas from "./vista/Portero/LoginPorteroRutas.js";
 import AdministradorRutas from "./vista/Administrador/AdministradorRutas.js";
 import LoginAdministradorRutas from "./vista/Administrador/LoginAdministradorRutas.js";
+import RecuperacionRutas from "./vista/Recuperacion/RecuperacionRutas.js"; 
 
 configDotenv();
 
@@ -36,15 +37,18 @@ class Servidor {
         this.app.use('/loginportero', LoginPorteroRutas);
         this.app.use('/admin', AdministradorRutas);
         this.app.use('/loginadmin', LoginAdministradorRutas);
+        this.app.use('/recovery', RecuperacionRutas);
     }
 
     iniciar() {
-        const PORT = process.env.PORT;
+        const PORT = process.env.PORT || 3333;
         this.app.listen(PORT, () => {
             console.log(`Servidor escuchando en http://localhost:${PORT}`);
         });
     }
+    
 }
+
 
 const servidor = new Servidor();
 servidor.iniciar();
