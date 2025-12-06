@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ---------------------------------------------------------
-    // 3. REFERENCIAS AL DOM
+    // 3. REFERENCIAS AL DOM Y MENÚ
     // ---------------------------------------------------------
     const modeloInput = document.getElementById('modelo');
     const serialInput = document.getElementById('serial');
@@ -53,15 +53,41 @@ document.addEventListener('DOMContentLoaded', async () => {
     const menuBtn = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
+    
+    // Referencia al botón de cerrar sesión (NUEVO)
+    const btnLogout = document.querySelector('.logout-item');
 
     if(menuBtn) {
         menuBtn.addEventListener('click', () => {
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
         });
+    }
+    
+    if(overlay) {
         overlay.addEventListener('click', () => {
             sidebar.classList.remove('active');
             overlay.classList.remove('active');
+        });
+    }
+
+    // LÓGICA DE CERRAR SESIÓN (NUEVO)
+    if (btnLogout) {
+        btnLogout.addEventListener('click', (e) => {
+            e.preventDefault(); // Evita redirección inmediata
+            
+            Swal.fire({
+                title: 'Cerrando sesión...',
+                text: 'Guardando cambios y saliendo...',
+                timer: 1500,
+                timerProgressBar: true,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                willClose: () => {
+                    localStorage.clear(); // Limpia sesión
+                    window.location.href = 'login.html';
+                }
+            });
         });
     }
 

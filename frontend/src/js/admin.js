@@ -1,4 +1,4 @@
-// Variable global para el color, accesible desde todo el archivo
+// Variable global para el color
 const SENA_GREEN = '#018102';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,12 +23,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ---------------------------------------------------------
-    // 2. SIDEBAR Y MENU
+    // 2. REFERENCIAS DOM
     // ---------------------------------------------------------
     const menuBtn = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
+    const btnCargar = document.getElementById("btn-porteros"); 
+    const tablaBody = document.querySelector(".sena-table tbody");
+    
+    // *** NUEVO: Referencia al botón de cerrar sesión ***
+    const btnLogout = document.querySelector('.logout-item');
 
+    // ---------------------------------------------------------
+    // 3. SIDEBAR Y MENU
+    // ---------------------------------------------------------
     function toggleMenu() {
         sidebar.classList.toggle('active');
         overlay.classList.toggle('active');
@@ -39,11 +47,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // ---------------------------------------------------------
-    // 3. CARGAR USUARIOS
+    // 4. FUNCIONALIDAD CERRAR SESIÓN (AÑADIDO)
     // ---------------------------------------------------------
-    const btnCargar = document.getElementById("btn-porteros"); 
-    const tablaBody = document.querySelector(".sena-table tbody");
+    if (btnLogout) {
+        btnLogout.addEventListener('click', (e) => {
+            e.preventDefault(); // Evita ir al href inmediatamente
+            
+            Swal.fire({
+                title: 'Cerrando sesión...',
+                text: 'Hasta pronto Administrador',
+                timer: 1500, // 1.5 segundos
+                timerProgressBar: true,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                willClose: () => {
+                    // Borrar datos y redirigir
+                    localStorage.clear(); 
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+    }
 
+    // ---------------------------------------------------------
+    // 5. CARGAR USUARIOS
+    // ---------------------------------------------------------
+    
     // Cargar automáticamente al iniciar
     cargarUsuarios();
 
@@ -122,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(error);
             tablaBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red">Error de conexión con el servidor.</td></tr>';
             
-            // Opcional: Alerta flotante pequeña (Toast) si falla la carga
             const Toast = Swal.mixin({
                 toast: true,
                 position: 'top-end',
@@ -146,32 +174,28 @@ function editarUsuario(id, rol) {
 }
 
 // ---------------------------------------------------------
-// FUNCIÓN PARA ELIMINAR USUARIO (MODIFICADA CON SWEETALERT)
+// FUNCIÓN PARA ELIMINAR USUARIO
 // ---------------------------------------------------------
 function eliminarUsuario(id, rol) {
     
-    // 1. Usamos Swal.fire en lugar de confirm()
     Swal.fire({
         title: '¿Estás seguro?',
         text: `Estás a punto de eliminar al ${rol}. Esta acción no se puede deshacer.`,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: SENA_GREEN, // Verde SENA
-        cancelButtonColor: '#d33',      // Rojo para cancelar
+        confirmButtonColor: SENA_GREEN, 
+        cancelButtonColor: '#d33',     
         confirmButtonText: 'Sí, eliminar',
         cancelButtonText: 'Cancelar'
     }).then(async (result) => {
         
-        // Si el usuario confirma (hace clic en "Sí, eliminar")
         if (result.isConfirmed) {
             
-            // Verificamos token nuevamente
             const token = localStorage.getItem('token');
             if (!token) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Sesión expirada',
-                    text: 'Por favor inicia sesión de nuevo',
                     confirmButtonColor: SENA_GREEN
                 }).then(() => window.location.href = 'login.html');
                 return;
@@ -186,7 +210,6 @@ function eliminarUsuario(id, rol) {
                 urlDestino = `${BASE_URL}/admin/portero/eliminar/${id}`;
             }
 
-            // Mostramos "Cargando..." mientras borra
             Swal.fire({
                 title: 'Eliminando...',
                 text: 'Por favor espere',
@@ -206,19 +229,16 @@ function eliminarUsuario(id, rol) {
                 const data = await respuesta.json();
 
                 if (respuesta.ok) {
-                    // ÉXITO
                     Swal.fire({
                         icon: 'success',
                         title: '¡Eliminado!',
                         text: `El ${rol} ha sido eliminado correctamente.`,
                         confirmButtonColor: SENA_GREEN
                     }).then(() => {
-                        // Recargamos la página para actualizar la tabla
                         window.location.reload();
                     });
 
                 } else {
-                    // ERROR DE API
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -232,7 +252,7 @@ function eliminarUsuario(id, rol) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error de conexión',
-                    text: 'Verifique su conexión a internet o que el servidor esté activo.',
+                    text: 'Verifique su conexión.',
                     confirmButtonColor: SENA_GREEN
                 });
             }

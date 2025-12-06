@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IngreSENA - Recuperar Contraseña</title>
     <link rel="stylesheet" href="./src/css/recoverystyles.css">
+    <!-- AGREGADO: Librería de Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="shortcut icon" href="./src/media/logo_sena.png" type="image/png">
 </head>
 <body>
@@ -20,7 +22,6 @@
 
             <form id="recoveryForm" class="login-form" novalidate>
                 
-                <!-- Fila: Correo + Botón Enviar -->
                 <div class="form-row">
                     <div class="input-group flex-grow">
                         <label for="email">Correo Electrónico</label>
@@ -30,8 +31,6 @@
                     <button type="button" id="btnSendCode" class="btn-side">Enviar</button>
                 </div>
 
-                <!-- Campo Código (OCULTO INICIALMENTE) -->
-                <!-- Le agregué id="codeGroup" y la clase 'hidden' para que no estorbe al principio -->
                 <div id="codeGroup" class="input-group hidden fade-in">
                     <label for="code">Código de Verificación</label>
                     <input type="text" id="code" placeholder="Ingresa el código de 6 dígitos" maxlength="6">
@@ -39,17 +38,26 @@
                     <small class="info-text">Revisa tu bandeja de entrada (o spam)</small>
                 </div>
 
-                <!-- Sección Contraseña (Oculta hasta validar código) -->
+                <!-- SECCIÓN MODIFICADA: Inputs con ojito -->
                 <div id="passwordSection" class="hidden fade-in">
+                    
+                    <!-- Nueva Contraseña -->
                     <div class="input-group">
                         <label for="newPassword">Nueva Contraseña</label>
-                        <input type="password" id="newPassword" placeholder="Mín. 8 caracteres, 1 Mayús, 1 Núm, 1 Especial">
+                        <div class="password-wrapper">
+                            <input type="password" id="newPassword" placeholder="Mín. 8 caracteres" required>
+                            <i class="fas fa-eye toggle-password" id="toggleNewPassword"></i>
+                        </div>
                         <small class="error-message"></small>
                     </div>
 
+                    <!-- Confirmar Contraseña -->
                     <div class="input-group">
                         <label for="confirmPassword">Confirmar Contraseña</label>
-                        <input type="password" id="confirmPassword" placeholder="Repite tu contraseña">
+                        <div class="password-wrapper">
+                            <input type="password" id="confirmPassword" placeholder="Repite tu contraseña" required>
+                            <i class="fas fa-eye toggle-password" id="toggleConfirmPassword"></i>
+                        </div>
                         <small class="error-message"></small>
                     </div>
 

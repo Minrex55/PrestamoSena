@@ -10,12 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarEquipos();
 
     // ---------------------------------------------------------
-    // 1. LÓGICA DEL SIDEBAR
+    // 1. LÓGICA DEL SIDEBAR Y CERRAR SESIÓN
     // ---------------------------------------------------------
     const menuBtn = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
     const btnPorteros = document.getElementById('btn-porteros'); 
+    
+    // Referencia al botón de cerrar sesión
+    const btnLogout = document.querySelector('.logout-item');
 
     function toggleMenu() {
         sidebar.classList.toggle('active');
@@ -33,6 +36,26 @@ document.addEventListener('DOMContentLoaded', () => {
         btnPorteros.addEventListener('click', (e) => {
             e.preventDefault();
             cargarEquipos();
+        });
+    }
+
+    // *** NUEVO: Lógica de Cerrar Sesión con SweetAlert ***
+    if (btnLogout) {
+        btnLogout.addEventListener('click', (e) => {
+            e.preventDefault(); // Evita la redirección inmediata
+            
+            Swal.fire({
+                title: 'Cerrando sesión...',
+                text: 'Guardando actividad...',
+                timer: 1500, // Tiempo de espera
+                timerProgressBar: true,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                willClose: () => {
+                    localStorage.clear(); // Borra el token y datos
+                    window.location.href = 'login.html'; // Redirige
+                }
+            });
         });
     }
 
@@ -87,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ---------------------------------------------------------
-    // 3. FORMULARIO DE REGISTRO (SIMULACIÓN ACTUALIZADA)
+    // 3. FORMULARIO DE REGISTRO
     // ---------------------------------------------------------
     const pcForm = document.getElementById('pcForm');
     if(pcForm) {
@@ -96,7 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Aquí iría tu fetch POST real...
             
-            // Reemplazo del alert por SweetAlert
             Swal.fire({
                 icon: 'success',
                 title: '¡Equipo Registrado!',
@@ -106,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }).then(() => {
                 pcForm.reset();
                 if(previewContainer) previewContainer.innerHTML = "";
-                // Recargar la tabla para ver el nuevo (si fuera real)
+                // Recargar la tabla
                 cargarEquipos(); 
             });
         });
@@ -221,7 +243,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </td>
                 <td>
                     <div class="action-buttons">
-                        <!-- Corregido: Solo pasamos ID, el rol no es necesario aquí -->
                         <button class="btn-edit" onclick="editarEquipo('${idEquipo}')" title="Editar">
                             <i class="fas fa-edit"></i>
                         </button>

@@ -9,12 +9,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const BASE_URL = 'http://localhost:3333/portero';
     const token = localStorage.getItem('token');
     
-    // Referencias del DOM
-    const form = document.getElementById('createUserForm'); // Ojo: Asegúrate que el ID del form en tu HTML sea este, o cámbialo a 'createDeviceForm' si aplica
+    // Referencias del DOM para el formulario
+    const form = document.getElementById('createUserForm'); 
     const inputModelo = document.getElementById('modelo');
     const inputSerie = document.getElementById('serie');
     const inputInvitado = document.getElementById('invitado');
     const estadoSelect = document.getElementById('estado');
+
+    // Referencias del DOM para el Menú y Logout
+    const menuBtn = document.getElementById('menu-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const btnLogout = document.querySelector('.logout-item');
 
     // Verificar autenticación
     if (!token) {
@@ -31,7 +37,54 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -------------------------------------------------------------------------
-    // 2. LÓGICA PARA CREAR (REGISTRAR)
+    // 2. LÓGICA DEL SIDEBAR Y CERRAR SESIÓN (NUEVO)
+    // -------------------------------------------------------------------------
+    
+    // Toggle del menú lateral (Móvil)
+    function toggleMenu() {
+        if(sidebar && overlay) {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+    }
+
+    if (menuBtn) {
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+    }
+
+    if (overlay) {
+        overlay.addEventListener('click', () => {
+            if (sidebar.classList.contains('active')) {
+                toggleMenu();
+            }
+        });
+    }
+
+    // Lógica de Cerrar Sesión
+    if (btnLogout) {
+        btnLogout.addEventListener('click', (e) => {
+            e.preventDefault(); // Evita redirección inmediata
+            
+            Swal.fire({
+                title: 'Cerrando sesión...',
+                text: 'Guardando cambios y saliendo...',
+                timer: 1500,
+                timerProgressBar: true,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                willClose: () => {
+                    localStorage.clear(); // Limpia sesión
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+    }
+
+    // -------------------------------------------------------------------------
+    // 3. LÓGICA PARA CREAR (REGISTRAR)
     // -------------------------------------------------------------------------
     if (form) {
         form.addEventListener('submit', async (e) => {

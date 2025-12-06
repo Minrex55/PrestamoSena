@@ -197,6 +197,22 @@ input.valid {
     transform: translateY(-2px);
 }
 
+/* --- ELIMINAR OJO NATIVO DEL NAVEGADOR --- */
+
+/* Esto oculta el ojo automático de Edge/Internet Explorer */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none !important;
+}
+
+/* Esto oculta iconos de gestión de contraseñas que a veces pone Chrome/Webkit */
+input[type="password"]::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
     .form-grid {

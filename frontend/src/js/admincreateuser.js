@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             title: 'Acceso Denegado',
             text: 'Sesión no válida o no tienes permisos.',
             confirmButtonText: 'Ir al Login',
-            confirmButtonColor: SENA_GREEN, // <--- COLOR APLICADO
+            confirmButtonColor: SENA_GREEN,
             allowOutsideClick: false
         }).then(() => {
             window.location.href = './login.html';
@@ -23,10 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // ... (El código del Sidebar y Contraseña sigue igual) ...
+    // ---------------------------------------------------------
+    // 1. REFERENCIAS DOM Y MENU
+    // ---------------------------------------------------------
     const menuBtn = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
+    
+    // Referencia al botón de logout
+    const btnLogout = document.querySelector('.logout-item');
 
     function toggleMenu() {
         sidebar.classList.toggle('active');
@@ -48,6 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ---------------------------------------------------------
+    // 2. TOGGLE PASSWORD
+    // ---------------------------------------------------------
     const togglePasswordBtn = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');
 
@@ -61,7 +69,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ---------------------------------------------------------
-    // 3. ENVÍO DEL FORMULARIO
+    // 3. FUNCIONALIDAD CERRAR SESIÓN (NUEVO)
+    // ---------------------------------------------------------
+    if (btnLogout) {
+        btnLogout.addEventListener('click', (e) => {
+            e.preventDefault(); // Evita ir al href inmediatamente
+            
+            Swal.fire({
+                title: 'Cerrando sesión...',
+                text: 'Guardando cambios y saliendo...',
+                timer: 1500, // 1.5 segundos
+                timerProgressBar: true,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                willClose: () => {
+                    // Borrar datos y redirigir
+                    localStorage.clear(); 
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+    }
+
+    // ---------------------------------------------------------
+    // 4. ENVÍO DEL FORMULARIO
     // ---------------------------------------------------------
     const createForm = document.getElementById('createUserForm');
 
@@ -96,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     icon: 'warning',
                     title: 'Faltan datos',
                     text: 'Por favor selecciona un rol válido.',
-                    confirmButtonColor: SENA_GREEN // <--- COLOR APLICADO
+                    confirmButtonColor: SENA_GREEN
                 });
                 return;
             }
@@ -130,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         title: '¡Usuario Creado!',
                         text: data.mensaje || 'Registro exitoso.',
                         confirmButtonText: 'Aceptar',
-                        confirmButtonColor: SENA_GREEN // <--- COLOR APLICADO
+                        confirmButtonColor: SENA_GREEN
                     }).then(() => {
                         createForm.reset();
                         window.location.href = './adminpanel.html'; 
@@ -143,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             icon: 'warning',
                             title: 'Sesión Caducada',
                             text: 'Tu sesión ha expirado.',
-                            confirmButtonColor: SENA_GREEN // <--- COLOR APLICADO
+                            confirmButtonColor: SENA_GREEN
                         }).then(() => {
                             window.location.href = 'login.html';
                         });
@@ -154,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         icon: 'error',
                         title: 'Error al crear',
                         text: data.mensaje || 'Ocurrió un error inesperado',
-                        confirmButtonColor: SENA_GREEN // <--- COLOR APLICADO
+                        confirmButtonColor: SENA_GREEN
                     });
                 }
 
@@ -164,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     icon: 'error',
                     title: 'Error de Conexión',
                     text: 'No se pudo conectar con el servidor.',
-                    confirmButtonColor: SENA_GREEN // <--- COLOR APLICADO
+                    confirmButtonColor: SENA_GREEN
                 });
             }
         });

@@ -32,6 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuBtn = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
+    
+    // Referencia al botón de cerrar sesión (NUEVO)
+    const btnLogout = document.querySelector('.logout-item');
 
     // Secciones
     const sectionPerfil = document.getElementById('perfil');
@@ -354,6 +357,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // =========================================================
+    // 8. CERRAR SESIÓN (NUEVO)
+    // =========================================================
+    if (btnLogout) {
+        btnLogout.addEventListener('click', (e) => {
+            e.preventDefault(); // Evita redirección inmediata
+            
+            Swal.fire({
+                title: 'Cerrando sesión...',
+                text: '¡Hasta pronto!',
+                timer: 1500, // 1.5 Segundos
+                timerProgressBar: true,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                willClose: () => {
+                    localStorage.clear(); // Limpia toda la sesión
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+    }
 
     // Carga inicial
     cargarDatosPerfil();

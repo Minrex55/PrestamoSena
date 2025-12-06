@@ -276,4 +276,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    // =========================================================
+    // 4. NUEVA FUNCIONALIDAD: VISIBILIDAD DE CONTRASEÑA
+    // =========================================================
+    
+    // Función reutilizable para alternar visibilidad
+    function setupPasswordToggle(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+
+        if (input && icon) {
+            icon.addEventListener('click', () => {
+                // Alternar tipo
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+
+                // Alternar icono
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+            });
+        }
+    }
+
+    // Activamos para ambos campos
+    setupPasswordToggle('newPassword', 'toggleNewPassword');
+    setupPasswordToggle('confirmPassword', 'toggleConfirmPassword');
 });

@@ -265,6 +265,22 @@ body {
 
 .btn-cancel:hover { background-color: #5a6268; }
 
+/* --- ELIMINAR OJO NATIVO DEL NAVEGADOR --- */
+
+/* Esto oculta el ojo automático de Edge/Internet Explorer */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none !important;
+}
+
+/* Esto oculta iconos de gestión de contraseñas que a veces pone Chrome/Webkit */
+input[type="password"]::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+}
+
 /* =========================================
    MEDIA QUERIES (RESPONSIVE)
    ========================================= */

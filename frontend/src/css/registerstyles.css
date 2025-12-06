@@ -119,6 +119,48 @@ body {
 .footer-links { margin-top: 1.5rem; font-size: 0.9rem; }
 .footer-links a { color: var(--sena-green); text-decoration: none; font-weight: bold; }
 
+/* Toggle Password (Ojito) */
+.password-wrapper {
+    position: relative; /* Indispensable para que el ojo se posicione bien */
+    width: 100%;
+}
+
+.password-wrapper input {
+    padding-right: 40px; /* Espacio para que el texto no toque el ojo */
+    width: 100%; /* Asegura que llene el wrapper */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #999;
+    z-index: 10;
+}
+
+.toggle-password:hover {
+    color: var(--sena-green);
+}
+
+/* --- ELIMINAR OJO NATIVO DEL NAVEGADOR (Edge/IE) --- */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none !important;
+}
+
+/* Media Query para móviles muy pequeños */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 1.5rem;
+    }
+    
+    .header h1 {
+        font-size: 1.5rem;
+    }
+}
+
 /* Responsive: En celular, la fila de 2 columnas se vuelve 1 columna */
 @media (max-width: 550px) {
     .row-group {

@@ -127,4 +127,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    // =========================================================
+    // 6. VISIBILIDAD DE CONTRASEÑA
+    // =========================================================
+    
+    // Capturamos los elementos CORRECTOS por su ID del HTML
+    const passInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('togglePassword');
+
+    if (passInput && toggleIcon) {
+        toggleIcon.addEventListener('click', () => {
+            // Alternar tipo de input
+            const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passInput.setAttribute('type', type);
+
+            // Alternar icono (Ojo abierto / Ojo tachado)
+            toggleIcon.classList.toggle('fa-eye');
+            toggleIcon.classList.toggle('fa-eye-slash');
+        });
+    }
 });
